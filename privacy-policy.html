@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Helper - Privacy Policy</title>
+    <style>
+        :root {
+            --bg: #0f0f1a;
+            --card-bg: rgba(255,255,255,0.05);
+            --text: #e2e8f0;
+            --text-muted: rgba(255,255,255,0.6);
+            --accent: #7c3aed;
+            --border: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+        }
+        h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        p, li {
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        ul { padding-left: 1.5rem; }
+        li { margin-bottom: 0.4rem; }
+        .highlight {
+            background: rgba(124, 58, 237, 0.15);
+            border-left: 3px solid #7c3aed;
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        .highlight p { margin: 0; color: var(--text); }
+        .badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        a { color: #7c3aed; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Privacy Policy</h1>
+        <p class="last-updated">Last Updated: June 2026</p>
+        <p><span class="badge">🛡️ Zero Data Collection</span></p>
+
+        <h2>Overview</h2>
+        <p>AI Chat Helper is a Chrome extension that helps you copy and summarize your AI chat conversations. 
+        We are committed to protecting your privacy. This extension is designed with a <strong>privacy-first architecture</strong>.</p>
+
+        <div class="highlight">
+            <p><strong>TL;DR: We collect ZERO data. Everything happens locally on your device. 
+            No data is ever sent to any server, period.</strong></p>
+        </div>
+
+        <h2>Data Collection</h2>
+        <p><strong>We do NOT collect, store, transmit, or share any data.</strong> Specifically:</p>
+        <ul>
+            <li>❌ No personal information is collected</li>
+            <li>❌ No browsing history is tracked</li>
+            <li>❌ No conversation content is stored or transmitted</li>
+            <li>❌ No analytics or telemetry data is gathered</li>
+            <li>❌ No cookies are read or written</li>
+            <li>❌ No third-party services are contacted</li>
+            <li>❌ No advertising or marketing data is collected</li>
+        </ul>
+
+        <h2>How the Extension Works</h2>
+        <p>When you click the extension icon on an AI chat page:</p>
+        <ul>
+            <li>The extension reads the visible conversation text from the current page DOM</li>
+            <li>All text processing (formatting, summarization) happens <strong>entirely in your browser</strong></li>
+            <li>Copied text goes to your <strong>local clipboard</strong> only</li>
+            <li>No data is sent to any external server or API</li>
+        </ul>
+
+        <h2>Permissions Explained</h2>
+        <ul>
+            <li><strong>activeTab</strong> — Allows the extension to read the content of the currently active tab, but ONLY when you click the extension icon. No background access.</li>
+            <li><strong>storage</strong> — Used to save your preferences (like UI settings) locally on your device using Chrome's built-in storage API.</li>
+            <li><strong>scripting</strong> — Allows the extension to inject the content extraction script into the active tab when you request a copy or summary.</li>
+        </ul>
+
+        <h2>Summarization</h2>
+        <p>Text summarization is performed using:</p>
+        <ul>
+            <li>A <strong>local extractive algorithm</strong> that runs entirely in your browser</li>
+            <li>Optionally, Chrome's <strong>built-in AI</strong> (Gemini Nano) if available — this also runs on your device</li>
+        </ul>
+        <p>No text is ever sent to external AI services for summarization.</p>
+
+        <h2>Data Storage</h2>
+        <p>The only data stored locally is:</p>
+        <ul>
+            <li>Your UI preferences (e.g., preferred copy format, summary length)</li>
+            <li>This data is stored using <code>chrome.storage.local</code> and never leaves your device</li>
+        </ul>
+
+        <h2>Third-Party Services</h2>
+        <p>This extension does <strong>not</strong> communicate with any third-party services, APIs, or servers. 
+        It is a fully offline, self-contained tool.</p>
+
+        <h2>Updates to This Policy</h2>
+        <p>If we ever update this privacy policy, the changes will be reflected here with an updated "Last Updated" date. 
+        The core principle — <strong>zero data collection</strong> — will never change.</p>
+
+        <h2>Contact</h2>
+        <p>If you have any questions about this privacy policy, please file an issue on our GitHub repository or contact us through the Chrome Web Store listing.</p>
+
+        <div class="footer">
+            <p>AI Chat Helper v1.0.0 — Built with privacy as a priority</p>
+        </div>
+    </div>
+</body>
+</html>

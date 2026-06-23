@@ -1,0 +1,41 @@
+# Dependency directories
+node_modules/
+.npm/
+
+# Build output (generate with build.ps1)
+dist/
+
+# Temporary build staging
+$src/
+ach_build_*/
+
+# Icon source (not needed in public repo — run create_icons.ps1 to regenerate)
+icon_source.png
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V10
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+
+# Gemini / AI agent files (internal — not for public)
+.gemini/
+.agents/

@@ -1,0 +1,322 @@
+/*
+ * AI Chat Helper — Content Styles
+ * ================================
+ * Floating Action Button (FAB) + Toast notification
+ * for AI chat pages.
+ *
+ * Classes:
+ *   .ai-chat-helper-fab          – the circular FAB
+ *   .ai-chat-helper-fab-hidden   – hides the FAB
+ *   .ai-chat-helper-toast        – copy-success toast
+ */
+
+
+/* ──────────────────────────────────────────────
+   §1  CSS Variables (scoped to our elements)
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab,
+.ai-chat-helper-toast {
+  /* Palette */
+  --ach-bg:         rgba(22, 22, 30, 0.72);
+  --ach-bg-hover:   rgba(34, 34, 48, 0.88);
+  --ach-border:     rgba(255, 255, 255, 0.08);
+  --ach-border-hov: rgba(108, 99, 255, 0.45);
+  --ach-accent:     #6c63ff;
+  --ach-accent-alt: #00c896;
+  --ach-text:       #e8e8ef;
+  --ach-shadow:     0 8px 32px rgba(0, 0, 0, 0.45),
+                    0 1px 4px rgba(0, 0, 0, 0.25);
+  --ach-shadow-hov: 0 12px 40px rgba(108, 99, 255, 0.25),
+                    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+
+/* ──────────────────────────────────────────────
+   §2  Floating Action Button (FAB)
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab {
+  /* Fixed position — bottom-right corner */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483647; /* max z-index to stay on top */
+
+  /* Circular shape */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  /* Glassmorphism */
+  background: var(--ach-bg);
+  border: 1px solid var(--ach-border);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: var(--ach-shadow);
+
+  /* Content centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Icon — using Unicode clipboard emoji */
+  font-size: 20px;
+  line-height: 1;
+  color: var(--ach-text);
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+
+  /* Smooth transitions */
+  transition:
+    transform       0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background      0.2s  ease,
+    border-color    0.2s  ease,
+    box-shadow      0.3s  ease,
+    opacity         0.25s ease;
+
+  /* Entry animation */
+  animation: ach-fab-entry 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* FAB icon (using ::after for the copy symbol) */
+.ai-chat-helper-fab::after {
+  content: '📋';
+  display: block;
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+
+/* ──────────────────────────────────────────────
+   §2a  FAB — Hover State
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab:hover {
+  transform: scale(1.12);
+  background: var(--ach-bg-hover);
+  border-color: var(--ach-border-hov);
+  box-shadow: var(--ach-shadow-hov);
+}
+
+.ai-chat-helper-fab:hover::after {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+/* Tooltip on hover — "Copy Chat" */
+.ai-chat-helper-fab:hover::before {
+  content: 'Copy Chat';
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* Tooltip styling */
+  background: var(--ach-bg-hover);
+  color: var(--ach-text);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--ach-border-hov);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  /* Fade-in */
+  animation: ach-tooltip-in 0.2s ease both;
+  pointer-events: none;
+}
+
+
+/* ──────────────────────────────────────────────
+   §2b  FAB — Active (pressed) State
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab:active {
+  transform: scale(0.95);
+  transition-duration: 0.1s;
+}
+
+
+/* ──────────────────────────────────────────────
+   §2c  FAB — Success state (after copy)
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab[data-state="success"]::after {
+  content: '✅';
+  animation: ach-check-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.ai-chat-helper-fab[data-state="success"] {
+  border-color: var(--ach-accent-alt);
+  box-shadow: 0 8px 32px rgba(0, 200, 150, 0.2),
+              0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ──────────────────────────────────────────────
+   §2d  FAB — Hidden
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-fab-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.5) !important;
+  transition:
+    opacity   0.2s ease,
+    transform 0.2s ease !important;
+}
+
+
+/* ──────────────────────────────────────────────
+   §3  Toast Notification
+   ────────────────────────────────────────────── */
+
+.ai-chat-helper-toast {
+  /* Fixed position — bottom-center */
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  z-index: 2147483647;
+
+  /* Pill shape */
+  padding: 10px 20px;
+  border-radius: 12px;
+
+  /* Glassmorphism */
+  background: var(--ach-bg);
+  border: 1px solid var(--ach-border);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: var(--ach-shadow);
+
+  /* Typography */
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ach-text);
+  white-space: nowrap;
+
+  /* Entry animation */
+  animation: ach-toast-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  /* Pointer events */
+  pointer-events: none;
+}
+
+/* Success variant */
+.ai-chat-helper-toast[data-type="success"] {
+  border-color: rgba(0, 200, 150, 0.35);
+}
+
+.ai-chat-helper-toast[data-type="success"]::before {
+  content: '✓ ';
+  color: var(--ach-accent-alt);
+  font-weight: 700;
+}
+
+/* Error variant */
+.ai-chat-helper-toast[data-type="error"] {
+  border-color: rgba(255, 80, 80, 0.35);
+}
+
+.ai-chat-helper-toast[data-type="error"]::before {
+  content: '✕ ';
+  color: #ff5050;
+  font-weight: 700;
+}
+
+/* Auto-dismiss: fade out after 2.5s */
+.ai-chat-helper-toast.ach-toast-dismiss {
+  animation: ach-toast-out 0.3s ease both;
+}
+
+
+/* ──────────────────────────────────────────────
+   §4  Keyframe Animations
+   ────────────────────────────────────────────── */
+
+/* FAB entry — scale + fade from bottom */
+@keyframes ach-fab-entry {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Tooltip fade-in */
+@keyframes ach-tooltip-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Checkmark pop on success */
+@keyframes ach-check-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Toast slide-in from right */
+@keyframes ach-toast-in {
+  0% {
+    opacity: 0;
+    transform: translateX(24px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Toast fade-out */
+@keyframes ach-toast-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(24px) scale(0.92);
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   §5  Reduced Motion — Accessibility
+   ────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-chat-helper-fab,
+  .ai-chat-helper-toast {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

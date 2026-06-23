@@ -1,0 +1,132 @@
+{
+  "extName": {
+    "message": "مساعد محادثات الذكاء الاصطناعي",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "انسخ ولخّص محادثاتك مع الذكاء الاصطناعي بضغطة واحدة. يعمل مع ChatGPT و Claude و Gemini و Copilot و Perplexity وغيرها. محلي 100% - بياناتك لا تغادر جهازك أبداً.",
+    "description": "Extension description for Chrome Web Store"
+  },
+  "headerTitle": {
+    "message": "مساعد المحادثات",
+    "description": "Header title in popup"
+  },
+  "headerSubtitle": {
+    "message": "نسخ وتلخيص محادثات AI",
+    "description": "Header subtitle"
+  },
+  "platformDetected": {
+    "message": "المنصة: $PLATFORM$",
+    "description": "Detected platform label",
+    "placeholders": {
+      "PLATFORM": {
+        "content": "$1",
+        "example": "ChatGPT"
+      }
+    }
+  },
+  "notOnAIPlatform": {
+    "message": "انتقل إلى صفحة محادثة AI للبدء",
+    "description": "Message when not on a supported platform"
+  },
+  "copyChat": {
+    "message": "نسخ المحادثة كاملة",
+    "description": "Copy button label"
+  },
+  "summarizeChat": {
+    "message": "تلخيص المحادثة",
+    "description": "Summarize button label"
+  },
+  "formatMarkdown": {
+    "message": "Markdown",
+    "description": "Markdown format option"
+  },
+  "formatPlainText": {
+    "message": "نص عادي",
+    "description": "Plain text format option"
+  },
+  "formatHTML": {
+    "message": "HTML",
+    "description": "HTML format option"
+  },
+  "formatJSON": {
+    "message": "JSON",
+    "description": "JSON format option"
+  },
+  "summaryShort": {
+    "message": "قصير",
+    "description": "Short summary option"
+  },
+  "summaryMedium": {
+    "message": "متوسط",
+    "description": "Medium summary option"
+  },
+  "summaryLong": {
+    "message": "طويل",
+    "description": "Long summary option"
+  },
+  "copied": {
+    "message": "تم النسخ!",
+    "description": "Copy success message"
+  },
+  "copyFailed": {
+    "message": "فشل النسخ. حاول مرة أخرى.",
+    "description": "Copy failure message"
+  },
+  "noMessages": {
+    "message": "لم يتم العثور على رسائل في هذه الصفحة.",
+    "description": "No messages found message"
+  },
+  "extracting": {
+    "message": "جاري استخراج المحادثة...",
+    "description": "Loading message during extraction"
+  },
+  "summarizing": {
+    "message": "جاري التلخيص...",
+    "description": "Loading message during summarization"
+  },
+  "summaryResult": {
+    "message": "الملخص",
+    "description": "Summary section title"
+  },
+  "keyPoints": {
+    "message": "النقاط الرئيسية",
+    "description": "Key points section title"
+  },
+  "topicsCovered": {
+    "message": "المواضيع المتناولة",
+    "description": "Topics section title"
+  },
+  "statsMessages": {
+    "message": "رسائل",
+    "description": "Stats label for message count"
+  },
+  "statsWords": {
+    "message": "كلمات",
+    "description": "Stats label for word count"
+  },
+  "settings": {
+    "message": "الإعدادات",
+    "description": "Settings section title"
+  },
+  "settingFloatingBtn": {
+    "message": "إظهار زر النسخ العائم على صفحات AI",
+    "description": "Floating button toggle label"
+  },
+  "settingAutoDetect": {
+    "message": "اكتشاف المنصة تلقائياً",
+    "description": "Auto-detect toggle label"
+  },
+  "privacyBadge": {
+    "message": "🔒 محلي وآمن 100%",
+    "description": "Privacy badge text"
+  },
+  "retry": {
+    "message": "إعادة المحاولة",
+    "description": "Retry button label"
+  },
+  "copySummary": {
+    "message": "نسخ الملخص",
+    "description": "Copy summary button label"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "extName": {
+    "message": "AI Chat Helper",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Copy and summarize your AI chat conversations with one click. Works with ChatGPT, Claude, Gemini, Copilot, Perplexity and more. 100% local - your data never leaves your device.",
+    "description": "Extension description for Chrome Web Store"
+  },
+  "headerTitle": {
+    "message": "AI Chat Helper",
+    "description": "Header title in popup"
+  },
+  "headerSubtitle": {
+    "message": "Copy & Summarize AI Chats",
+    "description": "Header subtitle"
+  },
+  "platformDetected": {
+    "message": "Platform: $PLATFORM$",
+    "description": "Detected platform label",
+    "placeholders": {
+      "PLATFORM": {
+        "content": "$1",
+        "example": "ChatGPT"
+      }
+    }
+  },
+  "notOnAIPlatform": {
+    "message": "Navigate to an AI chat to get started",
+    "description": "Message when not on a supported platform"
+  },
+  "copyChat": {
+    "message": "Copy Entire Chat",
+    "description": "Copy button label"
+  },
+  "summarizeChat": {
+    "message": "Summarize Chat",
+    "description": "Summarize button label"
+  },
+  "formatMarkdown": {
+    "message": "Markdown",
+    "description": "Markdown format option"
+  },
+  "formatPlainText": {
+    "message": "Plain Text",
+    "description": "Plain text format option"
+  },
+  "formatHTML": {
+    "message": "HTML",
+    "description": "HTML format option"
+  },
+  "formatJSON": {
+    "message": "JSON",
+    "description": "JSON format option"
+  },
+  "summaryShort": {
+    "message": "Short",
+    "description": "Short summary option"
+  },
+  "summaryMedium": {
+    "message": "Medium",
+    "description": "Medium summary option"
+  },
+  "summaryLong": {
+    "message": "Long",
+    "description": "Long summary option"
+  },
+  "copied": {
+    "message": "Copied to clipboard!",
+    "description": "Copy success message"
+  },
+  "copyFailed": {
+    "message": "Failed to copy. Please try again.",
+    "description": "Copy failure message"
+  },
+  "noMessages": {
+    "message": "No messages found on this page.",
+    "description": "No messages found message"
+  },
+  "extracting": {
+    "message": "Extracting conversation...",
+    "description": "Loading message during extraction"
+  },
+  "summarizing": {
+    "message": "Summarizing...",
+    "description": "Loading message during summarization"
+  },
+  "summaryResult": {
+    "message": "Summary",
+    "description": "Summary section title"
+  },
+  "keyPoints": {
+    "message": "Key Points",
+    "description": "Key points section title"
+  },
+  "topicsCovered": {
+    "message": "Topics Covered",
+    "description": "Topics section title"
+  },
+  "statsMessages": {
+    "message": "Messages",
+    "description": "Stats label for message count"
+  },
+  "statsWords": {
+    "message": "Words",
+    "description": "Stats label for word count"
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings section title"
+  },
+  "settingFloatingBtn": {
+    "message": "Show floating copy button on AI pages",
+    "description": "Floating button toggle label"
+  },
+  "settingAutoDetect": {
+    "message": "Auto-detect AI platform",
+    "description": "Auto-detect toggle label"
+  },
+  "privacyBadge": {
+    "message": "🔒 100% Local & Secure",
+    "description": "Privacy badge text"
+  },
+  "retry": {
+    "message": "Retry",
+    "description": "Retry button label"
+  },
+  "copySummary": {
+    "message": "Copy Summary",
+    "description": "Copy summary button label"
+  }
+}
