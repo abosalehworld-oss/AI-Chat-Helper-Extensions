@@ -266,58 +266,96 @@ function convertTable(table) {
 
 // ---- 3a. ChatGPT ----
 function extractChatGPT() {
-  let messages = [];
+  var messages = [];
 
-  // L1: data-message-author-role attribute (most reliable)
-  const l1 = document.querySelectorAll('[data-message-author-role]');
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 1: data-message-author-role (MOST RELIABLE 2024-2026)
+  // ChatGPT puts this attribute on the outer message wrapper div.
+  // Content lives inside .markdown / .prose / [data-message-content]
+  // ═══════════════════════════════════════════════════════
+  var l1 = document.querySelectorAll('[data-message-author-role]');
   if (l1.length > 0) {
     l1.forEach(function (el) {
-      const role = el.getAttribute('data-message-author-role');
-      const normalizedRole = (role === 'user') ? 'user' : 'assistant';
-      // The message content is usually inside a .markdown or the element itself
-      const contentEl = el.querySelector('[data-message-id]') || el;
-      messages.push({
-        role: normalizedRole,
-        content: nodeToMarkdown(contentEl, { listDepth: 0 }).trim()
-      });
+      var role          = el.getAttribute('data-message-author-role');
+      var normalizedRole = (role === 'user') ? 'user' : 'assistant';
+
+      // Find the actual prose/markdown container — NOT the outer wrapper
+      var contentEl = el.querySelector(
+        '.markdown, .prose, [class*="markdown"], [class*="prose"], ' +
+        '[data-message-content], .whitespace-pre-wrap'
+      ) || el;
+
+      var text = nodeToMarkdown(contentEl, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: normalizedRole, content: text });
+      }
     });
-    return messages;
+    if (messages.length > 0) return messages;
   }
 
-  // L2: data-testid conversation turns
-  const l2 = document.querySelectorAll('[data-testid*="conversation-turn"]');
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 2: data-testid conversation turns
+  // ═══════════════════════════════════════════════════════
+  var l2 = document.querySelectorAll('[data-testid*="conversation-turn"]');
   if (l2.length > 0) {
     l2.forEach(function (turn) {
-      // Determine role from data-testid or inner structure
-      const testId = turn.getAttribute('data-testid') || '';
-      let role = 'assistant';
+      var testId = turn.getAttribute('data-testid') || '';
+      var role   = 'assistant';
       if (testId.includes('user') || turn.querySelector('[data-message-author-role="user"]')) {
         role = 'user';
       }
-      const contentArea = turn.querySelector('[data-message-id]')
-                       || turn.querySelector('.markdown')
-                       || turn;
-      messages.push({
-        role: role,
-        content: nodeToMarkdown(contentArea, { listDepth: 0 }).trim()
-      });
+      var contentArea = turn.querySelector(
+        '.markdown, .prose, [class*="markdown"], [class*="prose"], [data-message-content]'
+      ) || turn;
+      var text = nodeToMarkdown(contentArea, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: role, content: text });
+      }
     });
-    return messages;
+    if (messages.length > 0) return messages;
   }
 
-  // L3: article elements inside main
-  const l3 = document.querySelectorAll('main article');
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 3: article elements — one article per message turn
+  // ═══════════════════════════════════════════════════════
+  var l3 = document.querySelectorAll('main article, [role="main"] article');
   if (l3.length > 0) {
     l3.forEach(function (article, i) {
-      messages.push({
-        role: (i % 2 === 0) ? 'user' : 'assistant',
-        content: nodeToMarkdown(article, { listDepth: 0 }).trim()
-      });
+      var text = nodeToMarkdown(article, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: (i % 2 === 0) ? 'user' : 'assistant', content: text });
+      }
     });
-    return messages;
+    if (messages.length > 0) return messages;
   }
 
-  // L4: generic fallback for ChatGPT
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 4: class patterns (last resort before generic)
+  // ═══════════════════════════════════════════════════════
+  var userEls = document.querySelectorAll(
+    '[class*="user-message"], [class*="human-message"], [class*="user-turn"]'
+  );
+  var aiEls = document.querySelectorAll(
+    '[class*="assistant-message"], [class*="bot-message"], [class*="ai-message"], [class*="gpt-message"]'
+  );
+  if (userEls.length > 0 || aiEls.length > 0) {
+    var classTurns = [];
+    userEls.forEach(function (el) { classTurns.push({ el: el, role: 'user' }); });
+    aiEls.forEach(function (el)   { classTurns.push({ el: el, role: 'assistant' }); });
+    classTurns.sort(function (a, b) {
+      var pos = a.el.compareDocumentPosition(b.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+    classTurns.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 0) messages.push({ role: item.role, content: text });
+    });
+    if (messages.length > 0) return messages;
+  }
+
+  // L_FINAL: generic fallback
   return extractGeneric();
 }
 
@@ -591,213 +629,347 @@ function extractClaude() {
 
 // ---- 3c. Google Gemini ----
 function extractGemini() {
-  let messages = [];
+  var messages = [];
 
-  // L1: model-response and user-query custom elements / data attributes
-  const userQueries = document.querySelectorAll(
-    'user-query, [data-testid="user-query"], [data-query-id]'
-  );
-  const modelResponses = document.querySelectorAll(
-    'model-response, [data-testid="model-response"], [data-response-id]'
-  );
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 1: Custom elements — user-query / model-response
+  // Most reliable for current Gemini (2024-2026)
+  // ═══════════════════════════════════════════════════════
+  var userQueries    = document.querySelectorAll('user-query');
+  var modelResponses = document.querySelectorAll('model-response');
 
   if (userQueries.length > 0 || modelResponses.length > 0) {
-    const allTurns = [];
-    userQueries.forEach(function (el) { allTurns.push({ el: el, role: 'user' }); });
-    modelResponses.forEach(function (el) { allTurns.push({ el: el, role: 'assistant' }); });
+    var allTurns = [];
+    userQueries.forEach(function (el) {
+      allTurns.push({ el: el, role: 'user' });
+    });
+    modelResponses.forEach(function (el) {
+      allTurns.push({ el: el, role: 'assistant' });
+    });
 
     allTurns.sort(function (a, b) {
-      const pos = a.el.compareDocumentPosition(b.el);
+      var pos = a.el.compareDocumentPosition(b.el);
       if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
-      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING)  return 1;
       return 0;
     });
 
     allTurns.forEach(function (item) {
-      const contentEl = item.el.querySelector('message-content, .message-content')
-                     || item.el;
-      messages.push({
-        role: item.role,
-        content: nodeToMarkdown(contentEl, { listDepth: 0 }).trim()
-      });
-    });
-    return messages;
-  }
-
-  // L2: ARIA / semantic selectors
-  const l2 = document.querySelectorAll('[role="listitem"], [role="article"]');
-  if (l2.length > 0) {
-    l2.forEach(function (el, i) {
-      messages.push({
-        role: (i % 2 === 0) ? 'user' : 'assistant',
-        content: nodeToMarkdown(el, { listDepth: 0 }).trim()
-      });
-    });
-    return messages;
-  }
-
-  // L3: conversation container patterns
-  const container = document.querySelector('.conversation-container, [class*="conversation"]');
-  if (container) {
-    const turns = container.querySelectorAll(':scope > div');
-    turns.forEach(function (turn, i) {
-      const text = nodeToMarkdown(turn, { listDepth: 0 }).trim();
+      // Gemini wraps text in .query-text / .response-container / message-content
+      var contentEl = item.el.querySelector(
+        '.query-text, .response-container, message-content, .message-content, .markdown'
+      ) || item.el;
+      var text = nodeToMarkdown(contentEl, { listDepth: 0 }).trim();
       if (text.length > 0) {
-        messages.push({
-          role: (i % 2 === 0) ? 'user' : 'assistant',
-          content: text
-        });
+        messages.push({ role: item.role, content: text });
+      }
+    });
+
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 2: data-testid patterns
+  // ═══════════════════════════════════════════════════════
+  var testIdEls = document.querySelectorAll(
+    '[data-testid="user-query"], [data-testid="model-response"], ' +
+    '[data-turn-role="user"], [data-turn-role="model"]'
+  );
+  if (testIdEls.length > 0) {
+    testIdEls.forEach(function (el) {
+      var testId  = el.getAttribute('data-testid')  || '';
+      var turnRole = el.getAttribute('data-turn-role') || '';
+      var role = 'assistant';
+      if (testId.includes('user') || turnRole === 'user') role = 'user';
+      var text = nodeToMarkdown(el, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: role, content: text });
       }
     });
     if (messages.length > 0) return messages;
   }
 
-  // L4: generic
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 3: Class-based patterns (Gemini uses BEM-like classes)
+  // ═══════════════════════════════════════════════════════
+  var userEls = document.querySelectorAll(
+    '[class*="user-query"], [class*="human-turn"], [class*="input-bubble"]'
+  );
+  var aiEls   = document.querySelectorAll(
+    '[class*="model-response"], [class*="response-content"], ' +
+    '[class*="ai-response"], [class*="bot-response"], [class*="markdown-response"]'
+  );
+
+  if (userEls.length > 0 || aiEls.length > 0) {
+    var classTurns = [];
+    userEls.forEach(function (el) { classTurns.push({ el: el, role: 'user' }); });
+    aiEls.forEach(function (el)   { classTurns.push({ el: el, role: 'assistant' }); });
+
+    classTurns.sort(function (a, b) {
+      var pos = a.el.compareDocumentPosition(b.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING)  return 1;
+      return 0;
+    });
+
+    // Deduplicate: skip if element is child of a previously included element
+    var included = [];
+    classTurns.forEach(function (item) {
+      var isChild = included.some(function (prev) {
+        return prev.el.contains(item.el) || item.el.contains(prev.el);
+      });
+      if (!isChild) included.push(item);
+    });
+
+    included.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: item.role, content: text });
+      }
+    });
+
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 4: ARIA roles — role="listitem" inside a chat feed
+  // ═══════════════════════════════════════════════════════
+  var feedEl = document.querySelector(
+    '[role="feed"], [role="list"], [aria-label*="conversation"], [aria-label*="chat"]'
+  );
+  if (feedEl) {
+    var items = feedEl.querySelectorAll('[role="listitem"], [role="article"]');
+    if (items.length > 0) {
+      items.forEach(function (el, i) {
+        var text = nodeToMarkdown(el, { listDepth: 0 }).trim();
+        if (text.length > 0) {
+          messages.push({
+            role:    (i % 2 === 0) ? 'user' : 'assistant',
+            content: text
+          });
+        }
+      });
+      return messages;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 5: Structural — conversation container direct children
+  // ═══════════════════════════════════════════════════════
+  var container = document.querySelector(
+    '.conversation-container, [class*="conversation"], ' +
+    '[class*="chat-history"], [class*="message-list"]'
+  );
+  if (container) {
+    var turns = container.querySelectorAll(':scope > div, :scope > li');
+    var found = [];
+    turns.forEach(function (turn) {
+      var text = nodeToMarkdown(turn, { listDepth: 0 }).trim();
+      if (text.length > 5) found.push(text);
+    });
+
+    if (found.length > 1) {
+      found.forEach(function (text, i) {
+        messages.push({
+          role:    (i % 2 === 0) ? 'user' : 'assistant',
+          content: text
+        });
+      });
+      return messages;
+    }
+  }
+
+  // L_FINAL: generic fallback
   return extractGeneric();
 }
 
-// ---- 3d. Copilot ----
+// ---- 3d. Copilot (copilot.microsoft.com / bing.com/chat) ----
 function extractCopilot() {
-  let messages = [];
+  var messages = [];
 
-  // L1: cib-message-group custom elements
-  const cibGroups = document.querySelectorAll(
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 1: cib-message-group custom elements (classic Copilot)
+  // These are Shadow DOM web components with a "source" attribute
+  // ═══════════════════════════════════════════════════════
+  var cibGroups = document.querySelectorAll(
     'cib-message-group, [data-testid="message-group"], [data-testid*="cib-message"]'
   );
   if (cibGroups.length > 0) {
     cibGroups.forEach(function (group) {
-      const source = group.getAttribute('source') || '';
-      const role = (source === 'user') ? 'user' : 'assistant';
+      var source = group.getAttribute('source') || '';
+      var role   = (source === 'user') ? 'user' : 'assistant';
 
-      // Dive into shadow DOM if necessary
-      let contentEl = group;
+      var contentEl = group;
       if (group.shadowRoot) {
         contentEl = group.shadowRoot.querySelector('.content, .response-message-group') || group;
       }
 
-      const cibMessages = contentEl.querySelectorAll
+      var cibMessages = contentEl.querySelectorAll
         ? contentEl.querySelectorAll('cib-message, [data-testid="message"]')
         : [];
 
       if (cibMessages.length > 0) {
         cibMessages.forEach(function (msg) {
-          let inner = msg;
+          var inner = msg;
           if (msg.shadowRoot) {
             inner = msg.shadowRoot.querySelector('.content, .text-message-content') || msg;
           }
-          messages.push({
-            role: role,
-            content: nodeToMarkdown(inner, { listDepth: 0 }).trim()
-          });
+          var text = nodeToMarkdown(inner, { listDepth: 0 }).trim();
+          if (text.length > 0) messages.push({ role: role, content: text });
         });
       } else {
-        messages.push({
-          role: role,
-          content: nodeToMarkdown(contentEl, { listDepth: 0 }).trim()
-        });
-      }
-    });
-    return messages;
-  }
-
-  // L2: data-content attribute or ARIA roles
-  const l2 = document.querySelectorAll('[data-content="ai-message"], [data-content="user-message"]');
-  if (l2.length > 0) {
-    l2.forEach(function (el) {
-      const content = el.getAttribute('data-content') || '';
-      const role = content.includes('user') ? 'user' : 'assistant';
-      messages.push({
-        role: role,
-        content: nodeToMarkdown(el, { listDepth: 0 }).trim()
-      });
-    });
-    return messages;
-  }
-
-  // L3: response containers
-  const responses = document.querySelectorAll('[class*="response"], [class*="message"]');
-  if (responses.length > 0) {
-    responses.forEach(function (el, i) {
-      const text = nodeToMarkdown(el, { listDepth: 0 }).trim();
-      if (text.length > 20) {
-        messages.push({
-          role: (i % 2 === 0) ? 'user' : 'assistant',
-          content: text
-        });
+        var text = nodeToMarkdown(contentEl, { listDepth: 0 }).trim();
+        if (text.length > 0) messages.push({ role: role, content: text });
       }
     });
     if (messages.length > 0) return messages;
   }
 
-  // L4: generic
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 2: New Copilot UI (2024-2026) — data-testid on turns
+  // ═══════════════════════════════════════════════════════
+  var testIdEls = document.querySelectorAll(
+    '[data-testid*="user-message"], [data-testid*="bot-message"], ' +
+    '[data-testid*="human-turn"], [data-testid*="assistant-turn"]'
+  );
+  if (testIdEls.length > 0) {
+    testIdEls.forEach(function (el) {
+      var testId = el.getAttribute('data-testid') || '';
+      var role   = (testId.includes('user') || testId.includes('human')) ? 'user' : 'assistant';
+      var text   = nodeToMarkdown(el, { listDepth: 0 }).trim();
+      if (text.length > 0) messages.push({ role: role, content: text });
+    });
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 3: data-content attribute (older Copilot/Bing)
+  // ═══════════════════════════════════════════════════════
+  var dataContentEls = document.querySelectorAll(
+    '[data-content="ai-message"], [data-content="user-message"], ' +
+    '[data-author="user"], [data-author="bot"]'
+  );
+  if (dataContentEls.length > 0) {
+    dataContentEls.forEach(function (el) {
+      var dc   = el.getAttribute('data-content') || el.getAttribute('data-author') || '';
+      var role = dc.includes('user') ? 'user' : 'assistant';
+      var text = nodeToMarkdown(el, { listDepth: 0 }).trim();
+      if (text.length > 0) messages.push({ role: role, content: text });
+    });
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 4: ARIA — [role="listitem"] inside [role="log"]
+  // ═══════════════════════════════════════════════════════
+  var logEl = document.querySelector('[role="log"], [aria-label*="conversation"], [aria-label*="chat"]');
+  if (logEl) {
+    var listItems = logEl.querySelectorAll('[role="listitem"], [role="article"]');
+    if (listItems.length > 0) {
+      listItems.forEach(function (item, i) {
+        var text = nodeToMarkdown(item, { listDepth: 0 }).trim();
+        if (text.length > 0) {
+          messages.push({ role: (i % 2 === 0) ? 'user' : 'assistant', content: text });
+        }
+      });
+      return messages;
+    }
+  }
+
+  // L_FINAL
   return extractGeneric();
 }
 
 // ---- 3e. Perplexity ----
 function extractPerplexity() {
-  let messages = [];
+  var messages = [];
 
-  // L1: data-testid patterns
-  const l1 = document.querySelectorAll(
-    '[data-testid*="query"], [data-testid*="answer"], [data-testid*="message"]'
-  );
-  if (l1.length > 0) {
-    l1.forEach(function (el) {
-      const testId = el.getAttribute('data-testid') || '';
-      let role = 'assistant';
-      if (testId.includes('query') || testId.includes('user')) {
-        role = 'user';
-      }
-      messages.push({
-        role: role,
-        content: nodeToMarkdown(el, { listDepth: 0 }).trim()
-      });
-    });
-    return messages;
-  }
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 1: Perplexity-specific data-testid (most reliable)
+  // Perplexity uses "user-query-bubble" and "answer-header"/"answer-content"
+  // ═══════════════════════════════════════════════════════
+  var userEls  = document.querySelectorAll('[data-testid="user-query-bubble"], [data-testid*="user-query"]');
+  var aiEls    = document.querySelectorAll('[data-testid*="answer"], [data-testid*="response"]');
 
-  // L2: .prose class (commonly used for answer content) and ARIA roles
-  const queries = document.querySelectorAll('[role="heading"], .query-text, [class*="query"]');
-  const answers = document.querySelectorAll('.prose, [class*="answer"], [role="article"]');
-
-  if (queries.length > 0 || answers.length > 0) {
-    const allTurns = [];
-    queries.forEach(function (el) { allTurns.push({ el: el, role: 'user' }); });
-    answers.forEach(function (el) { allTurns.push({ el: el, role: 'assistant' }); });
+  if (userEls.length > 0 || aiEls.length > 0) {
+    var allTurns = [];
+    userEls.forEach(function (el) { allTurns.push({ el: el, role: 'user' }); });
+    aiEls.forEach(function (el)   { allTurns.push({ el: el, role: 'assistant' }); });
 
     allTurns.sort(function (a, b) {
-      const pos = a.el.compareDocumentPosition(b.el);
+      var pos = a.el.compareDocumentPosition(b.el);
       if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
       if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
       return 0;
     });
 
+    // Deduplicate nested elements
+    var included = [];
     allTurns.forEach(function (item) {
-      const text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
-      if (text.length > 0) {
-        messages.push({ role: item.role, content: text });
-      }
+      var isNested = included.some(function (prev) {
+        return prev.el.contains(item.el) || item.el.contains(prev.el);
+      });
+      if (!isNested) included.push(item);
+    });
+
+    included.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 0) messages.push({ role: item.role, content: text });
     });
     if (messages.length > 0) return messages;
   }
 
-  // L3: thread-based structure
-  const thread = document.querySelector('[class*="thread"], [class*="conversation"]');
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 2: .prose (AI answer body) + class*="query" (user input)
+  // ═══════════════════════════════════════════════════════
+  var queries = document.querySelectorAll(
+    '[class*="UserMessage"], [class*="user-message"], [class*="query-bubble"]'
+  );
+  var answers = document.querySelectorAll(
+    '.prose, [class*="AnswerBody"], [class*="answer-content"], [class*="markdown-content"]'
+  );
+
+  if (queries.length > 0 || answers.length > 0) {
+    var allTurns2 = [];
+    queries.forEach(function (el) { allTurns2.push({ el: el, role: 'user' }); });
+    answers.forEach(function (el) { allTurns2.push({ el: el, role: 'assistant' }); });
+
+    allTurns2.sort(function (a, b) {
+      var pos = a.el.compareDocumentPosition(b.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+
+    allTurns2.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 5) messages.push({ role: item.role, content: text });
+    });
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 3: Thread-based structure
+  // ═══════════════════════════════════════════════════════
+  var thread = document.querySelector(
+    '[class*="Thread"], [class*="thread"], [class*="conversation"], [class*="chat-thread"]'
+  );
   if (thread) {
-    const blocks = thread.querySelectorAll(':scope > div');
-    blocks.forEach(function (block, i) {
-      const text = nodeToMarkdown(block, { listDepth: 0 }).trim();
-      if (text.length > 10) {
-        messages.push({
-          role: (i % 2 === 0) ? 'user' : 'assistant',
-          content: text
-        });
-      }
+    var blocks = thread.querySelectorAll(':scope > div, :scope > section');
+    var found = [];
+    blocks.forEach(function (block) {
+      var text = nodeToMarkdown(block, { listDepth: 0 }).trim();
+      if (text.length > 10) found.push(text);
     });
-    if (messages.length > 0) return messages;
+    if (found.length > 1) {
+      found.forEach(function (text, i) {
+        messages.push({ role: (i % 2 === 0) ? 'user' : 'assistant', content: text });
+      });
+      return messages;
+    }
   }
 
-  // L4: generic
+  // L_FINAL
   return extractGeneric();
 }
 
@@ -1034,15 +1206,34 @@ function extract() {
   const platform = detectPlatform();
 
   // Dispatch to the appropriate extractor
-  let rawMessages;
+  var rawMessages;
   switch (platform.id) {
-    case 'chatgpt':    rawMessages = extractChatGPT();    break;
-    case 'claude':     rawMessages = extractClaude();      break;
-    case 'gemini':     rawMessages = extractGemini();      break;
-    case 'copilot':    rawMessages = extractCopilot();     break;
-    case 'perplexity': rawMessages = extractPerplexity();  break;
-    default:           rawMessages = extractGeneric();     break;
+    case 'chatgpt':     rawMessages = extractChatGPT();    break;
+    case 'claude':      rawMessages = extractClaude();     break;
+    case 'gemini':      rawMessages = extractGemini();     break;
+    case 'copilot':     rawMessages = extractCopilot();    break;
+    case 'perplexity':  rawMessages = extractPerplexity(); break;
+    // DeepSeek, Grok, Poe, HuggingFace, You.com — all use generic with their markup
+    case 'deepseek':
+    case 'grok':
+    case 'huggingface':
+    case 'poe':
+    case 'you':
+    default:            rawMessages = extractGeneric();    break;
   }
+
+  // ── Post-extraction: deduplicate identical messages ──
+  var seen = new Set();
+  var deduped = [];
+  rawMessages.forEach(function (msg) {
+    if (!msg.content) return;
+    var key = msg.role + '||' + msg.content.trim().slice(0, 200);
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduped.push(msg);
+    }
+  });
+  rawMessages = deduped;
 
   // Filter out empty messages and add indices
   const messages = [];
