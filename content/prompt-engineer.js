@@ -417,88 +417,193 @@ ${idea}
       descAr: '\u062d\u0633\u0651\u0646 \u0623\u064a \u0645\u0642\u0627\u0644 \u0623\u0648 \u0635\u0641\u062d\u0629 \u0644\u062c\u0648\u062c\u0644 2026 + \u0645\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a (ChatGPT, Gemini, Perplexity). \u064a\u063a\u0637\u064a E-E-A-T \u0648GEO \u0648\u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0646\u0638\u0645\u0629.',
       exampleEn: 'e.g. "Optimize this article about WordPress SEO for 2026 search engines"',
       exampleAr: '\u0645\u062b\u0627\u0644: "\u062d\u0633\u0651\u0646 \u0627\u0644\u0645\u0642\u0627\u0644 \u062f\u0647 \u0639\u0646 \u0646\u062c\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0642\u0639 \u0639\u0634\u0627\u0646 \u064a\u062a\u0635\u062f\u0631 \u062c\u0648\u062c\u0644 \u0648ChatGPT"',
-      build: (idea, lang) => `You are a senior SEO strategist and GEO (Generative Engine Optimization) expert with deep knowledge of Google's 2026 ranking systems AND how AI answer engines (ChatGPT, Gemini, Perplexity, Claude) select and cite content.
-
-## Content to Optimize
-${idea}
-
----
-
-## PART 1 — Traditional SEO (Google 2026)
-
-### 1. E-E-A-T Audit (Experience, Expertise, Authoritativeness, Trustworthiness)
-- Does the content demonstrate FIRST-HAND experience?
-- Is the author's expertise clearly established?
-- Are claims backed by credible sources or data?
-- What trust signals are missing? (author bio, citations, dates)
-
-### 2. Search Intent Alignment
-- Identify the PRIMARY intent: Informational / Navigational / Commercial / Transactional
-- Is the content format matching what Google currently ranks? (listicle, how-to, comparison, definition)
-- What is the EXACT keyword this should rank for? Provide: Primary keyword + 5 semantic LSI variants
-
-### 3. On-Page SEO Checklist
-- **Title tag**: Optimized version (under 60 chars, keyword first)
-- **Meta description**: Click-worthy version (under 155 chars with CTA)
-- **H1/H2/H3 structure**: Rewrite heading hierarchy for topic authority
-- **Internal linking**: Suggest 3 anchor text opportunities
-- **Content length**: Is it long enough to cover the topic comprehensively?
-
-### 4. Featured Snippet Optimization
-- Rewrite the key definition/answer as a 40-60 word paragraph snippet
-- Add a numbered list or table that Google can pull as a snippet
-
----
-
-## PART 2 — GEO (Generative Engine Optimization for AI Search 2026)
-
-> GEO = optimizing content so AI models (ChatGPT Search, Gemini, Perplexity, Copilot) CITE and QUOTE your content in their answers.
-
-### 5. Citation-Worthiness Score (rate 1-10 and explain)
-- **Factual density**: Does it contain specific data, statistics, dates, named entities?
-- **Quotability**: Are there clear, self-contained statements an AI can lift verbatim?
-- **Source authority**: Would an AI trust this as a primary source?
-
-### 6. GEO Content Improvements
-Provide 3-5 specific rewrites that make paragraphs more likely to be cited by AI engines:
-- Add concrete statistics with sources
-- Add "According to [authority]..." constructions
-- Add precise definitions for key terms
-- Add comparison tables (AI engines love structured data)
-
-### 7. Schema Markup Recommendations
-Which structured data types to add:
-- Article / BlogPosting / HowTo / FAQPage / Product / Review
-- Provide the top 3 most impactful schema types for THIS specific content
-
-### 8. FAQ Section (GEO Goldmine)
-Write 5 Q&A pairs that:
-- Match "People Also Ask" questions for this topic
-- Are phrased naturally (conversational queries AI engines receive)
-- Each answer is 2-4 sentences — complete and self-contained
-
----
-
-## PART 3 — Action Plan
-
-### Priority Fixes (do these first):
-1. [Most impactful change — implement in 5 minutes]
-2. [Second most impactful]
-3. [Third most impactful]
-
-### Content Gaps to Fill:
-- Topics your competitors cover that this content misses
-- Questions users ask that aren't answered here
-
-### Final Score: Rate this content /100 for:
-- Traditional SEO readiness: /100
-- GEO / AI citation readiness: /100
-- Combined 2026 search visibility score: /100
-
-## Rules
-- Give SPECIFIC rewrites, not vague advice like "improve the intro"
-- Every recommendation must be immediately actionable
-- Flag if the content violates any Google quality guidelines (thin content, AI-generated without review, etc.)`
+      build: (idea, lang) => [
+        'You are a senior SEO content strategist and GEO (Generative Engine Optimization) expert.',
+        '',
+        '## \u26a0\ufe0f Your Role & Honest Limitations',
+        'You are a CONTENT and STRUCTURE optimizer, NOT a keyword research tool.',
+        '- \u2705 CAN: analyze content quality, fix structure, improve E-E-A-T, write exact titles/meta tags/headings, generate FAQs, recommend schema, score GEO readiness, rewrite paragraphs',
+        '- \u274c CANNOT: provide real search volumes, real competitor rankings, live SERP data, or backlink metrics',
+        '- If user did NOT provide keyword/volume data: mark all keyword suggestions as "ESTIMATED - verify with Ahrefs/SEMrush/GSC"',
+        '- NEVER invent traffic numbers, DA scores, or ranking positions',
+        '',
+        '---',
+        '',
+        '## User Input (Paste: article + any real data you have)',
+        idea,
+        '',
+        '---',
+        '',
+        '## Step 0 - Data Inventory',
+        'Identify what the user provided before starting:',
+        '| Data Point | Status |',
+        '|------------|--------|',
+        '| Article / content text | YES / NO |',
+        '| Target keyword | [state it] or "Not provided" |',
+        '| Search volume | [state it] or "\u26a0\ufe0f Not provided - verify with tools" |',
+        '| Current ranking position | [state it] or "Not provided" |',
+        '| Competitor URLs | [list] or "Not provided" |',
+        '| Google Search Console / Ahrefs data | [state it] or "Not provided" |',
+        '',
+        '---',
+        '',
+        '## PART 1 - Content Quality & E-E-A-T',
+        '',
+        '### 1. E-E-A-T Deep Audit',
+        '| Signal | Score /10 | What Is Missing |',
+        '|--------|-----------|-----------------|',
+        '| Experience (first-hand proof, personal results, case studies) | /10 | |',
+        '| Expertise (demonstrates real knowledge, not just summarizing) | /10 | |',
+        '| Authoritativeness (named sources, external citations, data) | /10 | |',
+        '| Trustworthiness (date, author bio, disclaimers, fact-checking) | /10 | |',
+        '',
+        'Top 3 specific fixes (be exact, not generic):',
+        '1. ',
+        '2. ',
+        '3. ',
+        '',
+        '### 2. Search Intent Analysis',
+        '- Primary intent: Informational / Navigational / Commercial / Transactional',
+        '- Current content format: [describe]',
+        '- Optimal format for this intent: [e.g. step-by-step, comparison table, definition+examples]',
+        '- Format mismatch? YES / NO - if YES, describe the exact restructure needed',
+        '',
+        '### 3. On-Page SEO - Ready-to-Copy Rewrites',
+        '',
+        'Title tag (under 60 chars, keyword-first):',
+        '> ',
+        '',
+        'Meta description (under 155 chars, includes CTA):',
+        '> ',
+        '',
+        'H1:',
+        '> ',
+        '',
+        'Recommended H2 structure (5-7 subheadings for full topic coverage):',
+        '1. ',
+        '2. ',
+        '3. ',
+        '4. ',
+        '5. ',
+        '',
+        'Thin sections to expand (under 100 words):',
+        '- [section name] - add: [what specifically]',
+        '',
+        '### 4. Featured Snippet Capture',
+        'Paragraph snippet (40-60 words, directly answers the main query):',
+        '> ',
+        '',
+        'Numbered list snippet version:',
+        '1. ',
+        '2. ',
+        '3. ',
+        '',
+        '---',
+        '',
+        '## PART 2 - GEO: Generative Engine Optimization (AI Search 2026)',
+        '',
+        '> GEO = making your content the SOURCE that ChatGPT Search, Gemini, Perplexity, and Copilot CITE when users ask questions in your topic area. In 2026, AI engine citations drive significant traffic.',
+        '',
+        '### 5. AI Citation-Worthiness Scorecard',
+        '| Factor | Score /10 | Reason |',
+        '|--------|-----------|--------|',
+        '| Factual density (stats, dates, named entities, numbers) | /10 | |',
+        '| Quotability (self-contained statements AI can lift verbatim) | /10 | |',
+        '| Completeness (fully answers a question standalone) | /10 | |',
+        '| Structured data (tables, numbered lists, clear definitions) | /10 | |',
+        '| Overall GEO Score | /10 | |',
+        '',
+        '### 6. GEO Rewrites - 3 Paragraphs Made AI-Citable',
+        'Find 3 vague/weak paragraphs and rewrite each to be citation-worthy:',
+        '',
+        'Original paragraph 1: [quote it]',
+        'GEO-optimized rewrite:',
+        '> [Add: specific stat + "According to [source]..." + precise definition]',
+        '> Note: replace [VERIFY THIS STAT] with real data from an authoritative source',
+        '',
+        'Original paragraph 2: [quote it]',
+        'GEO-optimized rewrite:',
+        '> ',
+        '',
+        'Original paragraph 3: [quote it]',
+        'GEO-optimized rewrite:',
+        '> ',
+        '',
+        '### 7. Schema Markup - Top 3 for This Content',
+        '| # | Schema Type | Why This One | Key Fields to Fill |',
+        '|---|------------|-------------|-------------------|',
+        '| 1 | | | |',
+        '| 2 | | | |',
+        '| 3 | | | |',
+        '',
+        '### 8. FAQ Section - GEO Goldmine',
+        'Write 5 Q&A pairs for People Also Ask + AI engine queries.',
+        'Each answer = 2-4 sentences, completely self-contained (no "as mentioned above"):',
+        '',
+        'Q1: ',
+        'A1: ',
+        '',
+        'Q2: ',
+        'A2: ',
+        '',
+        'Q3: ',
+        'A3: ',
+        '',
+        'Q4: ',
+        'A4: ',
+        '',
+        'Q5: ',
+        'A5: ',
+        '',
+        '---',
+        '',
+        '## PART 3 - Keyword Analysis',
+        '',
+        'If user provided real keyword + volume data:',
+        '- Analyze keyword difficulty vs content depth match',
+        '- List 5 LSI/semantic variants and WHERE each should appear naturally',
+        '- Flag: over-optimized / under-optimized / good balance',
+        '',
+        'If NO keyword data was provided:',
+        '> \u26a0\ufe0f No real keyword data provided. Based on content topic, likely target keywords are:',
+        '> 1. [suggestion 1] - ESTIMATED, verify volume',
+        '> 2. [suggestion 2] - ESTIMATED, verify volume',
+        '> 3. [suggestion 3] - ESTIMATED, verify volume',
+        '> Verify with: Google Search Console (free) / Ahrefs / SEMrush / Ubersuggest',
+        '',
+        '---',
+        '',
+        '## PART 4 - Priority Action Plan',
+        '',
+        'Immediate (5-minute fixes, highest impact):',
+        '1. ',
+        '2. ',
+        '3. ',
+        '',
+        'This week (bigger impact, more effort):',
+        '1. ',
+        '2. ',
+        '',
+        'Ongoing (requires external tools):',
+        '- Verify keywords with Ahrefs / SEMrush',
+        '- Build internal links from existing site pages',
+        '- Monitor rankings via Google Search Console',
+        '- Track AI engine citations via Perplexity / ChatGPT searches',
+        '',
+        '## Final Assessment',
+        '| Metric | Score | Note |',
+        '|--------|-------|------|',
+        '| Content Quality | /100 | AI-reliable assessment |',
+        '| E-E-A-T Strength | /100 | AI-reliable assessment |',
+        '| GEO / AI Citation Readiness | /100 | AI-reliable assessment |',
+        '| SEO Ranking Potential | \u26a0\ufe0f Cannot score | Needs real keyword + backlink data |',
+        '',
+        '## Absolute Rules',
+        '- NEVER invent search volumes, DA scores, CTR data, or ranking positions',
+        '- Mark every estimated metric with \u26a0\ufe0f',
+        '- All rewrites must be copy-paste ready - never say "improve the intro" without showing the improved version',
+        '- If content appears AI-generated without human review, flag it explicitly as a Google quality risk'
+      ].join('\n')
     }
   };
 
