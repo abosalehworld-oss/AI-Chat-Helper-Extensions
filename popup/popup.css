@@ -420,6 +420,37 @@ body::-webkit-scrollbar-thumb:hover {
   position: absolute;
 }
 
+/* AI Summary Prompt button — teal accent */
+.btn-ai-prompt {
+  width: 100%;
+  padding: 11px 16px;
+  background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(14,165,233,0.15));
+  border: 1px solid rgba(6,182,212,0.4);
+  border-radius: var(--radius-md);
+  color: #22d3ee;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  transition: all var(--transition-normal);
+  margin-top: 6px;
+}
+.btn-ai-prompt:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(6,182,212,0.25), rgba(14,165,233,0.25));
+  border-color: rgba(6,182,212,0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(6,182,212,0.25);
+}
+.btn-ai-prompt:active:not(:disabled) { transform: scale(0.98); }
+.btn-ai-prompt:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-ai-prompt.loading .btn-text { opacity: 0; }
+.btn-ai-prompt.loading .btn-loading { display: block; position: absolute; }
+
 .btn-icon {
   display: flex;
   align-items: center;

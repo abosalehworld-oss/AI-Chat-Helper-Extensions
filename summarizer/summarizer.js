@@ -240,6 +240,116 @@ class AIChatSummarizer {
     return null;
   }
 
+  /**
+   * Build a ready-to-paste summary prompt for any AI platform.
+   * The user can copy this and paste it into ChatGPT, Gemini, Claude, Perplexity, etc.
+   * @param {Array} messages - [{role, content, index}]
+   * @param {Object} options - { length: 'short'|'medium'|'long', language: 'auto'|'en'|'ar' }
+   * @returns {string} - A complete prompt ready to paste into any AI
+   */
+  buildSummaryPrompt(messages, options = {}) {
+    const length   = options.length   || 'medium';
+    const language = options.language || 'auto';
+
+    if (!Array.isArray(messages) || messages.length === 0) return '';
+
+    const cleaned   = this._cleanMessages(messages);
+    const aiMsgs    = cleaned.filter(m => m && m.role === 'assistant');
+    const userMsgs  = cleaned.filter(m => m && m.role === 'user');
+
+    const detectedLang = language === 'auto'
+      ? this._detectLanguage(aiMsgs.map(m => m.content).join(' '))
+      : language;
+
+    const isAr = detectedLang === 'ar';
+
+    // Length instructions
+    const lengthInstructions = {
+      short:  isAr
+        ? '3 إلى 5 نقاط رئيسية فقط — موجزة جداً'
+        : '3 to 5 key bullet points — very concise',
+      medium: isAr
+        ? '7 إلى 10 نقاط — متوازنة بين الإيجاز والتفصيل'
+        : '7 to 10 bullets — balanced detail',
+      long:   isAr
+        ? 'تفصيل كامل — 15 نقطة أو أكثر مع شرح كل قرار'
+        : 'Full detail — 15+ bullets with explanations'
+    };
+
+    // Build conversation text (user + AI interleaved)
+    const convoLines = cleaned.map(m => {
+      const roleLabel = m.role === 'user'
+        ? (isAr ? '👤 المستخدم' : '👤 User')
+        : (isAr ? '🤖 الذكاء الاصطناعي' : '🤖 AI');
+      // Trim very long messages to avoid prompt overflow
+      const content = (m.content || '').trim().slice(0, 800);
+      return roleLabel + ':\n' + content;
+    });
+
+    const conversationText = convoLines.join('\n\n---\n\n');
+
+    // Build the prompt
+    const lines = isAr ? [
+      'أنت مساعد خبير في تلخيص المحادثات. لخّص المحادثة التالية بدقة واحترافية.',
+      '',
+      '## تعليمات التلخيص',
+      '- **الطول المطلوب:** ' + lengthInstructions[length],
+      '- **ركّز على:** القرارات المتخذة، المشاكل وحلولها، الخطوات العملية، النتائج الرئيسية',
+      '- **تجاهل:** التحيات، الجمل التكرارية، والحشو',
+      '- **اللغة:** اكتب الملخص بنفس لغة المحادثة',
+      '',
+      '## التنسيق المطلوب',
+      '### 📋 ملخص المحادثة',
+      '[فقرة افتتاحية: موضوع المحادثة في جملة أو جملتين]',
+      '',
+      '### ✅ النقاط الرئيسية',
+      '- نقطة 1',
+      '- نقطة 2',
+      '...',
+      '',
+      '### 💡 القرارات والنتائج',
+      '[أهم ما تم الاتفاق عليه أو إنجازه]',
+      '',
+      '### 🔄 الخطوات التالية (إن وجدت)',
+      '[أي مهام أو إجراءات قادمة ذُكرت]',
+      '',
+      '---',
+      '',
+      '## المحادثة',
+      conversationText
+    ] : [
+      'You are an expert conversation summarizer. Summarize the following conversation accurately and professionally.',
+      '',
+      '## Summarization Instructions',
+      '- **Required length:** ' + lengthInstructions[length],
+      '- **Focus on:** decisions made, problems and solutions, practical steps, key results',
+      '- **Ignore:** greetings, repetitive statements, filler content',
+      '- **Language:** Write the summary in the same language as the conversation',
+      '',
+      '## Required Format',
+      '### 📋 Conversation Summary',
+      '[Opening paragraph: what this conversation was about in 1-2 sentences]',
+      '',
+      '### ✅ Key Points',
+      '- Point 1',
+      '- Point 2',
+      '...',
+      '',
+      '### 💡 Decisions & Outcomes',
+      '[Most important things agreed upon or accomplished]',
+      '',
+      '### 🔄 Next Steps (if any)',
+      '[Any tasks or follow-up actions mentioned]',
+      '',
+      '---',
+      '',
+      '## The Conversation',
+      conversationText
+    ];
+
+    return lines.join('\n');
+  }
+
   // ─── PRIVATE: MESSAGE CLEANING & DEDUPLICATION ───────────
 
   /**

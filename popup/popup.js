@@ -189,6 +189,12 @@ function bindEventListeners() {
     DOM.btnSummarize.addEventListener('click', handleSummarizeClick);
   }
 
+  // AI Summary Prompt button
+  const btnAISummaryPrompt = document.getElementById('btnAISummaryPrompt');
+  if (btnAISummaryPrompt) {
+    btnAISummaryPrompt.addEventListener('click', handleAISummaryPromptClick);
+  }
+
   // Format selector pills
   if (DOM.formatSelector) {
     DOM.formatSelector.addEventListener('click', (e) => {
@@ -381,7 +387,83 @@ async function handleCopyClick() {
 // ═══════════════════════════════════════════════════════════
 
 /**
- * Handle summarize button click.
+ * Handle "AI Summary Prompt" button click.
+ * Builds a ready-to-paste prompt the user can drop into ANY AI platform
+ * (ChatGPT, Gemini, Claude, Perplexity, etc.) to get a real intelligent summary.
+ */
+async function handleAISummaryPromptClick() {
+  if (!activeTabId) { showToast('No active tab found', 'error'); return; }
+  if (!summarizer)  { showToast('Summarizer not loaded', 'error'); return; }
+
+  const btn = document.getElementById('btnAISummaryPrompt');
+  if (btn) setLoading(btn, true);
+  showSummarySkeleton();
+
+  try {
+    const result = await extractChat('json');
+    if (!result || !result.text) {
+      showToast('No messages found', 'error');
+      hideSummaryResult();
+      return;
+    }
+
+    let messages;
+    try {
+      const parsed = JSON.parse(result.text);
+      messages = Array.isArray(parsed) ? parsed
+               : (parsed && Array.isArray(parsed.messages)) ? parsed.messages
+               : [{ role: 'assistant', content: result.text, index: 0 }];
+    } catch (_) {
+      messages = [{ role: 'assistant', content: result.text, index: 0 }];
+    }
+
+    if (!messages.length) {
+      showToast('No messages found', 'error');
+      hideSummaryResult();
+      return;
+    }
+
+    // Build smart prompt
+    const prompt = summarizer.buildSummaryPrompt(messages, {
+      length:   selectedLength || 'medium',
+      language: 'auto'
+    });
+
+    if (!prompt) {
+      showToast('Could not build summary prompt', 'error');
+      hideSummaryResult();
+      return;
+    }
+
+    // Copy to clipboard
+    await navigator.clipboard.writeText(prompt);
+
+    // Show in result area
+    displaySummary({
+      summary: '✅ Summary prompt copied!\n\nPaste it into ChatGPT, Gemini, Claude, or any AI platform to get a perfect summary.\n\n---\n\n' + prompt.slice(0, 300) + (prompt.length > 300 ? '\n\n[...full prompt copied to clipboard]' : ''),
+      keyPoints: [
+        'Paste the prompt into any AI platform',
+        'The AI will generate a structured summary',
+        'Works with ChatGPT, Gemini, Claude, Perplexity, and more'
+      ],
+      topicsCovered: []
+    });
+
+    showToast('🤖 AI prompt copied! Paste in any AI platform', 'success');
+
+    if (result.stats) updateStats(result.stats);
+
+  } catch (error) {
+    console.error('[Popup] AI Summary Prompt error:', error);
+    showToast('Error: ' + (error.message || 'Unknown'), 'error');
+    hideSummaryResult();
+  } finally {
+    if (btn) setLoading(btn, false);
+  }
+}
+
+/**
+ * Handle summarize button click (local extractive summarizer).
  */
 async function handleSummarizeClick() {
   if (!activeTabId) {
