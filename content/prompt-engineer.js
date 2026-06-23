@@ -48,8 +48,11 @@
       label: 'General',
       labelAr: '\u0639\u0627\u0645',
       icon: '\uD83C\uDFAF',
+      descEn: 'Ask anything — the AI will think step-by-step and give structured answers.',
+      descAr: 'اسأل أي سؤال — الـ AI هيفكر خطوة بخطوة ويديك إجابة منظمة.',
+      exampleEn: 'e.g. "What are the best strategies to grow a SaaS business?"',
+      exampleAr: 'مثال: "إيه أفضل طريقة لزيادة مبيعات متجري الإلكتروني؟"',
       build: (idea, lang) => {
-        // Always output English prompt (saves tokens) — idea can be any language
         return `You are an advanced AI assistant. Follow this protocol precisely:
 
 ## Task
@@ -66,7 +69,6 @@ ${idea}
 - If you are uncertain about a fact, say so explicitly rather than guessing
 - Prioritize actionable, specific information over vague generalities
 - Match the depth of your response to the complexity of the task
-- IMPORTANT: Always respond in English for maximum precision and token efficiency
 
 Begin now.`;
       }
@@ -76,6 +78,10 @@ Begin now.`;
       label: 'Code',
       labelAr: '\u0628\u0631\u0645\u062C\u0629',
       icon: '\uD83D\uDCBB',
+      descEn: 'Write production-quality code with error handling, edge cases, and best practices.',
+      descAr: 'اكتب كود جاهز للإنتاج مع معالجة الأخطاء وأفضل الممارسات.',
+      exampleEn: 'e.g. "Build a REST API with Node.js and authentication"',
+      exampleAr: 'مثال: "اعمل WordPress plugin للسيو"',
       build: (idea, lang) => `You are a senior software engineer with 15+ years of experience across multiple languages and architectures. You write code that ships to production.
 
 ## Task
@@ -115,6 +121,10 @@ ${idea}
       label: 'Analyze',
       labelAr: '\u062A\u062D\u0644\u064A\u0644',
       icon: '\uD83D\uDD0D',
+      descEn: 'Deep analysis from multiple angles — optimistic, critical, and pragmatic views.',
+      descAr: 'تحليل عميق من زوايا متعددة — متفائل وناقد وعملي.',
+      exampleEn: 'e.g. "Analyze whether AI will replace software developers by 2030"',
+      exampleAr: 'مثال: "حلل هل الاستثمار في العقارات أفضل ولا الأسهم؟"',
       build: (idea, lang) => `You are a senior analyst with expertise in structured reasoning and critical thinking. Your analysis must be rigorous and evidence-based.
 
 ## Subject to Analyze
@@ -151,6 +161,10 @@ Specific, numbered next steps with priority levels (High/Medium/Low).
       label: 'Creative',
       labelAr: '\u0625\u0628\u062F\u0627\u0639\u064A',
       icon: '\u2728',
+      descEn: 'Creative writing — ads, stories, slogans, social media content with 3 concept options.',
+      descAr: 'كتابة إبداعية — إعلانات، قصص، شعارات، محتوى سوشيال ميديا مع 3 أفكار مختلفة.',
+      exampleEn: 'e.g. "Write a product launch email for a fitness app"',
+      exampleAr: 'مثال: "اكتب إعلان لتطبيق توصيل طعام جديد"',
       build: (idea, lang) => `You are a world-class creative director and writer. Your work is original, bold, and emotionally resonant.
 
 ## Creative Brief
@@ -180,6 +194,10 @@ Explain your creative choices in a brief "Director's Note" at the end.`
       label: 'Explain',
       labelAr: '\u0627\u0634\u0631\u062D',
       icon: '\uD83D\uDCD6',
+      descEn: 'Explain any topic at 5 levels — from simple analogy to expert nuance.',
+      descAr: 'اشرح أي موضوع على 5 مستويات — من تشبيه بسيط لتفاصيل خبير.',
+      exampleEn: 'e.g. "Explain how blockchain works"',
+      exampleAr: 'مثال: "اشرحلي إيه هو الذكاء الاصطناعي"',
       build: (idea, lang) => `You are the world's best teacher \u2014 you can explain quantum physics to a child and compiler design to a poet. You adapt your language to your audience.
 
 ## Topic to Explain
@@ -218,6 +236,10 @@ Resources, related topics, and what to learn next.
       label: 'Compare',
       labelAr: '\u0642\u0627\u0631\u0646',
       icon: '\u2696\uFE0F',
+      descEn: 'Compare 2+ options with a scoring table and a clear recommendation.',
+      descAr: 'قارن بين خيارين أو أكثر بجدول تقييم وتوصية واضحة.',
+      exampleEn: 'e.g. "Compare React vs Vue vs Svelte for a startup"',
+      exampleAr: 'مثال: "قارن بين Shopify وWooCommerce لمتجر إلكتروني"',
       build: (idea, lang) => `You are a decision-making expert who helps people make informed choices by structuring complex comparisons objectively.
 
 ## Comparison Request
@@ -258,6 +280,10 @@ State your recommendation with confidence level (High/Medium/Low) and the KEY fa
       label: 'Debug',
       labelAr: '\u062A\u0635\u062D\u064A\u062D',
       icon: '\uD83D\uDC1B',
+      descEn: 'Paste an error message or describe a bug — get root cause analysis and fix.',
+      descAr: 'الصق رسالة خطأ أو وصف المشكلة — هيديك السبب الجذري والحل.',
+      exampleEn: 'e.g. "TypeError: Cannot read property of undefined at line 42"',
+      exampleAr: 'مثال: "الموقع بيطلع صفحة بيضاء بعد ما عملت تحديث"',
       build: (idea, lang) => `You are a senior debugging specialist. You approach bugs like a detective \u2014 methodically, without assumptions.
 
 ## Problem Description
@@ -300,6 +326,10 @@ Think through the possible causes systematically:
       label: 'Plan',
       labelAr: '\u062E\u0637\u0629',
       icon: '\uD83D\uDCCB',
+      descEn: 'Turn a goal into a phased action plan with timelines and risk assessment.',
+      descAr: 'حوّل هدف لخطة عمل مرحلية بجدول زمني وتقييم مخاطر.',
+      exampleEn: 'e.g. "Plan launching a mobile app in 3 months"',
+      exampleAr: 'مثال: "خطة لإطلاق متجر إلكتروني في شهرين"',
       build: (idea, lang) => `You are a strategic planning expert who turns vague goals into executable action plans with measurable milestones.
 
 ## Goal
@@ -348,6 +378,10 @@ How to verify completion. Include specific metrics.
       label: 'Translate',
       labelAr: '\u062A\u0631\u062C\u0645',
       icon: '\uD83C\uDF10',
+      descEn: 'Professional translation with cultural adaptation — not literal word-by-word.',
+      descAr: 'ترجمة احترافية مع تكييف ثقافي — مش كلمة بكلمة.',
+      exampleEn: 'e.g. "Translate this marketing page from English to Arabic"',
+      exampleAr: 'مثال: "ترجم الإيميل ده من عربي لإنجليزي بشكل رسمي"',
       build: (idea, lang) => `You are a professional translator and cultural adaptation expert. You translate meaning, not just words.
 
 ## Translation Task
@@ -373,6 +407,98 @@ ${idea}
 - Preserve the original tone (formal \u2192 formal, casual \u2192 casual)
 - For technical terms: provide both the translated term and original in parentheses
 - If the text contains proper nouns, keep them as-is unless there's an established translation`
+    },
+
+    seo: {
+      label: 'SEO',
+      labelAr: '\u0633\u064a\u0648',
+      icon: '\uD83D\uDE80',
+      descEn: 'Optimize any article or page for Google 2026 + AI search engines (ChatGPT, Gemini, Perplexity). Covers E-E-A-T, GEO signals, and structured data.',
+      descAr: '\u062d\u0633\u0651\u0646 \u0623\u064a \u0645\u0642\u0627\u0644 \u0623\u0648 \u0635\u0641\u062d\u0629 \u0644\u062c\u0648\u062c\u0644 2026 + \u0645\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a (ChatGPT, Gemini, Perplexity). \u064a\u063a\u0637\u064a E-E-A-T \u0648GEO \u0648\u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0646\u0638\u0645\u0629.',
+      exampleEn: 'e.g. "Optimize this article about WordPress SEO for 2026 search engines"',
+      exampleAr: '\u0645\u062b\u0627\u0644: "\u062d\u0633\u0651\u0646 \u0627\u0644\u0645\u0642\u0627\u0644 \u062f\u0647 \u0639\u0646 \u0646\u062c\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0642\u0639 \u0639\u0634\u0627\u0646 \u064a\u062a\u0635\u062f\u0631 \u062c\u0648\u062c\u0644 \u0648ChatGPT"',
+      build: (idea, lang) => `You are a senior SEO strategist and GEO (Generative Engine Optimization) expert with deep knowledge of Google's 2026 ranking systems AND how AI answer engines (ChatGPT, Gemini, Perplexity, Claude) select and cite content.
+
+## Content to Optimize
+${idea}
+
+---
+
+## PART 1 — Traditional SEO (Google 2026)
+
+### 1. E-E-A-T Audit (Experience, Expertise, Authoritativeness, Trustworthiness)
+- Does the content demonstrate FIRST-HAND experience?
+- Is the author's expertise clearly established?
+- Are claims backed by credible sources or data?
+- What trust signals are missing? (author bio, citations, dates)
+
+### 2. Search Intent Alignment
+- Identify the PRIMARY intent: Informational / Navigational / Commercial / Transactional
+- Is the content format matching what Google currently ranks? (listicle, how-to, comparison, definition)
+- What is the EXACT keyword this should rank for? Provide: Primary keyword + 5 semantic LSI variants
+
+### 3. On-Page SEO Checklist
+- **Title tag**: Optimized version (under 60 chars, keyword first)
+- **Meta description**: Click-worthy version (under 155 chars with CTA)
+- **H1/H2/H3 structure**: Rewrite heading hierarchy for topic authority
+- **Internal linking**: Suggest 3 anchor text opportunities
+- **Content length**: Is it long enough to cover the topic comprehensively?
+
+### 4. Featured Snippet Optimization
+- Rewrite the key definition/answer as a 40-60 word paragraph snippet
+- Add a numbered list or table that Google can pull as a snippet
+
+---
+
+## PART 2 — GEO (Generative Engine Optimization for AI Search 2026)
+
+> GEO = optimizing content so AI models (ChatGPT Search, Gemini, Perplexity, Copilot) CITE and QUOTE your content in their answers.
+
+### 5. Citation-Worthiness Score (rate 1-10 and explain)
+- **Factual density**: Does it contain specific data, statistics, dates, named entities?
+- **Quotability**: Are there clear, self-contained statements an AI can lift verbatim?
+- **Source authority**: Would an AI trust this as a primary source?
+
+### 6. GEO Content Improvements
+Provide 3-5 specific rewrites that make paragraphs more likely to be cited by AI engines:
+- Add concrete statistics with sources
+- Add "According to [authority]..." constructions
+- Add precise definitions for key terms
+- Add comparison tables (AI engines love structured data)
+
+### 7. Schema Markup Recommendations
+Which structured data types to add:
+- Article / BlogPosting / HowTo / FAQPage / Product / Review
+- Provide the top 3 most impactful schema types for THIS specific content
+
+### 8. FAQ Section (GEO Goldmine)
+Write 5 Q&A pairs that:
+- Match "People Also Ask" questions for this topic
+- Are phrased naturally (conversational queries AI engines receive)
+- Each answer is 2-4 sentences — complete and self-contained
+
+---
+
+## PART 3 — Action Plan
+
+### Priority Fixes (do these first):
+1. [Most impactful change — implement in 5 minutes]
+2. [Second most impactful]
+3. [Third most impactful]
+
+### Content Gaps to Fill:
+- Topics your competitors cover that this content misses
+- Questions users ask that aren't answered here
+
+### Final Score: Rate this content /100 for:
+- Traditional SEO readiness: /100
+- GEO / AI citation readiness: /100
+- Combined 2026 search visibility score: /100
+
+## Rules
+- Give SPECIFIC rewrites, not vague advice like "improve the intro"
+- Every recommendation must be immediately actionable
+- Flag if the content violates any Google quality guidelines (thin content, AI-generated without review, etc.)`
     }
   };
 
@@ -649,6 +775,10 @@ ${idea}
         '<div id="ach-template-row" role="radiogroup" aria-label="Prompt type">' +
           tmplButtons +
         '</div>' +
+        '<div id="ach-mode-hint" dir="auto">' +
+          '<div id="ach-mode-desc"></div>' +
+          '<div id="ach-mode-example"></div>' +
+        '</div>' +
         '<div id="ach-output-lang-row">' +
           '<span id="ach-output-lang-label" data-en="AI Response Language:" data-ar="لغة رد الـ AI:">AI Response Language:</span>' +
           '<button class="ach-lang-pill active" data-outlang="en">English</button>' +
@@ -791,6 +921,11 @@ ${idea}
       '.ach-hist-preview{display:block;font-size:12px;color:rgba(226,232,240,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
       '.ach-hist-meta{display:block;font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}',
       '.ach-hist-empty{padding:12px;text-align:center;font-size:12px;color:rgba(255,255,255,.3)}',
+      /* Mode description hint */
+      '#ach-mode-hint{margin:0 0 6px;padding:8px 10px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:8px;animation:ach-fade-in .2s ease}',
+      '#ach-mode-hint[hidden]{display:none}',
+      '#ach-mode-desc{font-size:11.5px;color:rgba(196,181,253,.85);line-height:1.5;margin-bottom:3px}',
+      '#ach-mode-example{font-size:10.5px;color:rgba(255,255,255,.35);font-style:italic}',
     ].join('\n');
     document.head.appendChild(s);
   }
@@ -818,12 +953,31 @@ ${idea}
     var firstBtn = overlay.querySelector('.ach-tmpl-btn[data-key="general"]');
     if (firstBtn) firstBtn.classList.add('active');
 
+    // ── Mode hint elements ──
+    var modeHint    = overlay.querySelector('#ach-mode-hint');
+    var modeDesc    = overlay.querySelector('#ach-mode-desc');
+    var modeExample = overlay.querySelector('#ach-mode-example');
+
+    function showModeHint(key) {
+      var tmpl = PROMPT_TEMPLATES[key];
+      if (!tmpl || !modeHint) return;
+      // Detect UI language
+      var isAr = overlay.classList.contains('ach-rtl');
+      modeDesc.textContent    = isAr ? (tmpl.descAr || tmpl.descEn) : tmpl.descEn;
+      modeExample.textContent = isAr ? (tmpl.exampleAr || tmpl.exampleEn) : tmpl.exampleEn;
+      modeHint.hidden = false;
+    }
+
+    // Show default hint for 'general'
+    showModeHint('general');
+
     // Template buttons
     overlay.querySelectorAll('.ach-tmpl-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         overlay.querySelectorAll('.ach-tmpl-btn').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
         selectedTemplate = btn.dataset.key;
+        showModeHint(btn.dataset.key);
       });
     });
 
