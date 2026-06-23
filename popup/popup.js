@@ -461,7 +461,25 @@ async function handleSummarizeClick() {
       updateStats(result.stats);
     }
 
-    showToast('Summary generated!', 'success');
+    // ── Auto-copy summary to clipboard ──
+    // Build full summary text including key points
+    let fullSummaryText = summaryResult.summary || '';
+    if (summaryResult.keyPoints && summaryResult.keyPoints.length > 0) {
+      fullSummaryText += '\n\nKey Points:\n';
+      summaryResult.keyPoints.forEach(function(pt, i) {
+        fullSummaryText += (i + 1) + '. ' + pt + '\n';
+      });
+    }
+    if (summaryResult.topicsCovered && summaryResult.topicsCovered.length > 0) {
+      fullSummaryText += '\nTopics: ' + summaryResult.topicsCovered.join(', ');
+    }
+
+    try {
+      await navigator.clipboard.writeText(fullSummaryText);
+      showToast('✅ Summary copied! Paste it in Word (Ctrl+V)', 'success');
+    } catch (_) {
+      showToast('Summary ready — press the copy button above', 'info');
+    }
   } catch (error) {
     console.error('[Popup] Summarize error:', error);
     showToast('Failed to summarize: ' + (error.message || 'Unknown error'), 'error');
