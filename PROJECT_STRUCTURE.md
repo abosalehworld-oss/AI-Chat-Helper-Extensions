@@ -56,7 +56,7 @@ It gives users 4 superpowers on any AI chat page:
 │
 ├── privacy-policy.html         ← Required for Chrome Web Store listing
 │
-├── build.ps1                   ← Builds dist/ai-chat-helper-v1.0.0.zip (Store-ready)
+├── build.ps1                   ← Builds dist/ai-chat-helper-v1.0.2.zip (Store-ready)
 ├── verify.ps1                  ← Verifies file structure + validates manifest.json
 ├── create_icons.ps1            ← Resizes icon_source.png → icon16/48/128.png
 │
@@ -92,7 +92,7 @@ popup.js  →  chrome.runtime.sendMessage  →  service-worker.js
 
 | File | Key Export | Purpose |
 |------|-----------|---------|
-| `content.js` | `window.__aiChatHelper` | `.extract()` → structured messages, `.getFormattedText(fmt)` |
+| `content.js` | `window.__aiChatHelper` | `.extract()` sync, `.extractAsync()` with auto-scroll, `.getFormattedTextAsync(fmt)` |
 | `prompt-engineer.js` | `window.__aiChatHelperPromptEngineer` | `.toggle()` / `.isOpen()` — IIFE, self-contained |
 | `summarizer.js` | `window.AIChatSummarizer` | `.summarize(messages, options)` |
 | `service-worker.js` | message switch | Handles: PING, INJECT_CONTENT_SCRIPT, EXTRACT_CHAT, GET_FORMATTED_TEXT, TOGGLE_FAB, SAVE_SETTINGS, GET_SETTINGS, CHECK_PLATFORM, OPEN_PROMPT_ENGINEER |
@@ -110,6 +110,21 @@ Service worker has a mirror `platforms` object in `handleCheckPlatform()`.
 
 Detection order: URL regex match → `setPlatformState('detected'|'unsupported'|'unknown')`
 
+**Supported domains (v1.0.2):**
+
+| Platform | Domains | Extractor |
+|----------|---------|----------|
+| ChatGPT | chatgpt.com, chat.openai.com | `extractChatGPT()` — `data-message-author-role` |
+| Claude | claude.ai | `extractClaude()` — 6-strategy cascade (action-bar → testid → class → structural → ARIA → brute-force) |
+| Gemini | gemini.google.com | `extractGemini()` — custom elements + ARIA |
+| Copilot | copilot.microsoft.com, www.bing.com | `extractCopilot()` — Shadow DOM traversal |
+| Perplexity | perplexity.ai, www.perplexity.ai | `extractPerplexity()` — data-testid + .prose |
+| DeepSeek | deepseek.com, chat.deepseek.com | `extractGeneric()` |
+| Grok | grok.com, x.com | `extractGeneric()` |
+| HuggingFace | huggingface.co | `extractGeneric()` |
+| Poe | poe.com | `extractGeneric()` |
+| You.com | you.com | `extractGeneric()` |
+
 ---
 
 ## 🌍 Internationalization (i18n)
@@ -125,7 +140,7 @@ RTL is applied via `document.documentElement.dir` + `.ach-rtl` CSS class on the 
 
 ---
 
-## ✦ Prompt Engineer — 8 Modes
+## ✦ Prompt Engineer — 9 Modes
 
 All templates in `prompt-engineer.js` → `PROMPT_TEMPLATES` object:
 
@@ -178,7 +193,7 @@ Each template uses: Role definition → Chain-of-Thought → Structured output �
 
 ```powershell
 # Build ZIP for Chrome Web Store
-.\build.ps1          # → dist/ai-chat-helper-v1.0.0.zip
+.\build.ps1          # → dist/ai-chat-helper-v1.0.2.zip
 
 # Verify project structure
 .\verify.ps1
@@ -199,6 +214,31 @@ Build excludes: `*.ps1`, `*.bat`, `*.md`, `dist/`, `$src/`, `icon_source.png`
 3. **prompt-engineer.js is an IIFE** — It re-injects on every click from SW. The `window.__aiChatHelperPromptEngineer` guard prevents duplicate overlays. The storage listener is registered only once via `_langListenerAdded` flag.
 4. **Arabic folder name** — The workspace path contains Arabic characters. All scripts use `$PSScriptRoot` to avoid encoding issues on Windows.
 5. **Context menu** — Only appears on supported AI platform URLs (filtered via `documentUrlPatterns`). Right-click + select text → "✦ Improve with Prompt Engineer".
+6. **Claude DOM is unstable** — Anthropic updates Claude's UI frequently. `extractClaude()` uses 6 cascading strategies so at least one always works. Strategy 1 (action-bar + feedback button) is the most resilient to UI changes.
+7. **Long conversations (virtual scroll)** — `extractAsync()` calls `scrollToLoadAll()` first, which scrolls to top and waits for height to stabilize before extracting. Handles multi-day conversations.
+8. **Generic extractor platforms** — DeepSeek, Grok, Poe etc. use `extractGeneric()` which is content-only (no reliable role detection). Messages marked user/assistant by alternating index.
+
+---
+
+## 📝 Changelog
+
+### v1.0.2 (2026-06-23)
+- 🔴 **CRITICAL FIX**: `extractClaude()` completely rewritten — 6 cascading strategies replace broken `data-testid="human-turn"` selectors that no longer exist on claude.ai
+- **NEW**: Primary Claude strategy uses `[role="group"][aria-label="Message actions"]` + `button[aria-label*="feedback"]` — AI messages have feedback buttons, human ones don't
+- **FIX**: `getLastAIResponse()` in prompt-engineer.js updated with Claude action-bar fallback
+- **FIX**: `INPUT_SELECTORS` expanded with Claude ProseMirror, DeepSeek, Copilot textarea selectors
+- **FIX**: `detectPlatform()` now covers DeepSeek, Grok, HuggingFace, Poe, You.com
+- **FIX**: Service worker `handleCheckPlatform()` added x.com, www.bing.com, www.perplexity.ai
+- **FIX**: XSS vulnerability in history panel — replaced `innerHTML` with DOM API
+- **FIX**: Settings key sync between popup and service worker
+- **FIX**: Dead code `handleCopyClick` redefinition removed
+
+### v1.0.1 (2026-06-23)
+- Added `getFormattedTextAsync()` — auto-scrolls to load full conversations before extracting
+- `extractChat()` in popup.js now uses async path for Copy/Summarize/Export
+
+### v1.0.0 (2026-06-22)
+- Initial release
 
 ---
 

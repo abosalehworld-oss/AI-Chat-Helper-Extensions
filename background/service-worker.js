@@ -381,10 +381,13 @@ async function handleCheckPlatform(tabId) {
       'claude.ai': { id: 'claude', name: 'Claude' },
       'gemini.google.com': { id: 'gemini', name: 'Google Gemini' },
       'copilot.microsoft.com': { id: 'copilot', name: 'Microsoft Copilot' },
+      'www.bing.com': { id: 'copilot', name: 'Microsoft Copilot' },
       'perplexity.ai': { id: 'perplexity', name: 'Perplexity' },
+      'www.perplexity.ai': { id: 'perplexity', name: 'Perplexity' },
       'chat.deepseek.com': { id: 'deepseek', name: 'DeepSeek' },
       'deepseek.com': { id: 'deepseek', name: 'DeepSeek' },
       'grok.com': { id: 'grok', name: 'Grok' },
+      'x.com': { id: 'grok', name: 'Grok' },
       'poe.com': { id: 'poe', name: 'Poe' },
       'you.com': { id: 'you', name: 'You.com' },
       'huggingface.co': { id: 'huggingface', name: 'HuggingChat' }

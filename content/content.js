@@ -37,11 +37,26 @@ function detectPlatform() {
   if (host.includes('gemini.google.com')) {
     return { id: 'gemini', name: 'Google Gemini' };
   }
-  if (host.includes('copilot.microsoft.com')) {
+  if (host.includes('copilot.microsoft.com') || host.includes('bing.com')) {
     return { id: 'copilot', name: 'Microsoft Copilot' };
   }
   if (host.includes('perplexity.ai')) {
     return { id: 'perplexity', name: 'Perplexity' };
+  }
+  if (host.includes('deepseek.com')) {
+    return { id: 'deepseek', name: 'DeepSeek' };
+  }
+  if (host.includes('grok.com') || host.includes('x.com')) {
+    return { id: 'grok', name: 'Grok' };
+  }
+  if (host.includes('huggingface.co')) {
+    return { id: 'huggingface', name: 'HuggingFace Chat' };
+  }
+  if (host.includes('poe.com')) {
+    return { id: 'poe', name: 'Poe' };
+  }
+  if (host.includes('you.com')) {
+    return { id: 'you', name: 'You.com' };
   }
 
   return { id: 'unknown', name: 'Unknown AI Chat' };
@@ -308,43 +323,207 @@ function extractChatGPT() {
 
 // ---- 3b. Claude ----
 function extractClaude() {
-  let messages = [];
+  var messages = [];
 
-  // L1: data-testid based selectors
-  const l1Human = document.querySelectorAll('[data-testid="human-turn"], [data-testid*="human-message"]');
-  const l1Assistant = document.querySelectorAll('[data-testid="ai-turn"], [data-testid*="ai-message"], [data-testid*="assistant-message"]');
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 1: Action-bar based detection (MOST RELIABLE 2024-2026)
+  // Claude puts a "Message actions" group on every message.
+  // AI messages have a "Give positive feedback" button; human ones don't.
+  // ═══════════════════════════════════════════════════════
+  var actionBars = document.querySelectorAll('[role="group"][aria-label="Message actions"]');
+  if (actionBars.length > 0) {
+    var allTurns = [];
+    actionBars.forEach(function (bar) {
+      // Walk up to find the message container (usually 2-4 levels up)
+      var msgContainer = bar.closest('[data-testid]')
+                      || bar.closest('[class*="message"]')
+                      || bar.parentElement && bar.parentElement.parentElement
+                      || bar.parentElement;
 
-  if (l1Human.length > 0 || l1Assistant.length > 0) {
-    // Merge and sort by DOM order
-    const allTurns = [];
-    l1Human.forEach(function (el) { allTurns.push({ el: el, role: 'user' }); });
-    l1Assistant.forEach(function (el) { allTurns.push({ el: el, role: 'assistant' }); });
+      if (!msgContainer) return;
+
+      // Determine role: AI messages have a thumbs-up feedback button
+      var hasFeedback = bar.querySelector('button[aria-label*="feedback"], button[aria-label*="Feedback"]');
+      var role = hasFeedback ? 'assistant' : 'user';
+
+      // Find the actual content element (sibling or child, NOT the action bar itself)
+      var contentEl = null;
+
+      // Try to find a content area that's a sibling of the action bar's parent
+      var barParent = bar.parentElement;
+      if (barParent) {
+        var siblings = barParent.parentElement ? barParent.parentElement.children : [];
+        for (var s = 0; s < siblings.length; s++) {
+          var sib = siblings[s];
+          if (sib !== barParent && sib.textContent && sib.textContent.trim().length > 0) {
+            // Pick the sibling with actual text content (the message body)
+            if (!sib.querySelector('[role="group"][aria-label="Message actions"]')) {
+              contentEl = sib;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!contentEl) {
+        // Fallback: use the whole message container but skip the action bar
+        contentEl = msgContainer;
+      }
+
+      allTurns.push({ el: contentEl, role: role, anchor: bar });
+    });
 
     // Sort by document position
     allTurns.sort(function (a, b) {
-      const pos = a.el.compareDocumentPosition(b.el);
+      var pos = a.anchor.compareDocumentPosition(b.anchor);
       if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
       if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
       return 0;
     });
 
     allTurns.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: item.role, content: text });
+      }
+    });
+
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 2: data-testid selectors (older Claude versions)
+  // ═══════════════════════════════════════════════════════
+  var l1Human = document.querySelectorAll(
+    '[data-testid="human-turn"], [data-testid*="human-message"], [data-testid*="user-turn"], [data-testid*="user-message"]'
+  );
+  var l1Assistant = document.querySelectorAll(
+    '[data-testid="ai-turn"], [data-testid*="ai-message"], [data-testid*="assistant-turn"], [data-testid*="assistant-message"], [data-testid*="claude-message"]'
+  );
+
+  if (l1Human.length > 0 || l1Assistant.length > 0) {
+    var allTestIdTurns = [];
+    l1Human.forEach(function (el) { allTestIdTurns.push({ el: el, role: 'user' }); });
+    l1Assistant.forEach(function (el) { allTestIdTurns.push({ el: el, role: 'assistant' }); });
+
+    allTestIdTurns.sort(function (a, b) {
+      var pos = a.el.compareDocumentPosition(b.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+
+    allTestIdTurns.forEach(function (item) {
       messages.push({
         role: item.role,
         content: nodeToMarkdown(item.el, { listDepth: 0 }).trim()
       });
     });
-    return messages;
+    if (messages.length > 0) return messages;
   }
 
-  // L2: role attributes and contenteditable patterns
-  const l2 = document.querySelectorAll('[role="presentation"], [role="log"] > *, [role="region"]');
-  if (l2.length > 0) {
-    l2.forEach(function (el, i) {
-      // Determine role from text content or attributes
-      const text = el.textContent || '';
-      let role = 'assistant';
-      if (el.querySelector('[contenteditable]') || text.length < 200) {
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 3: Claude-specific class patterns
+  // Claude uses classes like "font-claude-message", "[class*='claude']"
+  // ═══════════════════════════════════════════════════════
+  var claudeMessages = document.querySelectorAll(
+    '.font-claude-message, [class*="claude-message"], [class*="response-message"]'
+  );
+  var humanMessages = document.querySelectorAll(
+    '[class*="human-message"], [class*="user-message"]'
+  );
+
+  if (claudeMessages.length > 0 || humanMessages.length > 0) {
+    var allClassTurns = [];
+    humanMessages.forEach(function (el) { allClassTurns.push({ el: el, role: 'user' }); });
+    claudeMessages.forEach(function (el) { allClassTurns.push({ el: el, role: 'assistant' }); });
+
+    allClassTurns.sort(function (a, b) {
+      var pos = a.el.compareDocumentPosition(b.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+
+    allClassTurns.forEach(function (item) {
+      var text = nodeToMarkdown(item.el, { listDepth: 0 }).trim();
+      if (text.length > 0) {
+        messages.push({ role: item.role, content: text });
+      }
+    });
+    if (messages.length > 0) return messages;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 4: Conversation thread — find the scrollable chat area
+  // and detect role by content length heuristic + copy button presence
+  // ═══════════════════════════════════════════════════════
+  var threadContainer = document.querySelector('[class*="thread"], [class*="conversation"], [class*="chat-messages"]')
+                     || document.querySelector('[role="main"]')
+                     || document.querySelector('main');
+
+  if (threadContainer) {
+    // Look for direct child divs that are message-like
+    var childDivs = threadContainer.querySelectorAll(':scope > div > div');
+    if (childDivs.length === 0) {
+      childDivs = threadContainer.querySelectorAll(':scope > div');
+    }
+
+    if (childDivs.length > 1) {
+      var foundMessages = [];
+      childDivs.forEach(function (child) {
+        var text = nodeToMarkdown(child, { listDepth: 0 }).trim();
+        if (text.length < 5) return; // skip empty/tiny divs
+
+        // Heuristic: AI messages typically have copy buttons and are longer
+        var hasCopyBtn = child.querySelector('button[data-testid*="copy"], button[aria-label*="Copy"], button[aria-label*="copy"]');
+        var hasFeedbackBtn = child.querySelector('button[aria-label*="feedback"], button[aria-label*="Feedback"]');
+
+        var role;
+        if (hasFeedbackBtn || hasCopyBtn) {
+          role = 'assistant';
+        } else if (text.length < 500 && !hasCopyBtn) {
+          role = 'user';
+        } else {
+          // If it has substantial content, assume assistant
+          role = 'assistant';
+        }
+
+        foundMessages.push({ role: role, content: text });
+      });
+
+      // Validate: ensure we have at least one user and one assistant
+      var hasUser = foundMessages.some(function (m) { return m.role === 'user'; });
+      var hasAssistant = foundMessages.some(function (m) { return m.role === 'assistant'; });
+
+      if (foundMessages.length > 0 && hasUser && hasAssistant) {
+        return foundMessages;
+      }
+
+      // If only one role detected, try alternating pattern
+      if (foundMessages.length > 1 && (!hasUser || !hasAssistant)) {
+        var altMessages = [];
+        foundMessages.forEach(function (m, i) {
+          altMessages.push({
+            role: (i % 2 === 0) ? 'user' : 'assistant',
+            content: m.content
+          });
+        });
+        return altMessages;
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 5: ARIA / semantic — role="presentation" or "log"
+  // ═══════════════════════════════════════════════════════
+  var ariaEls = document.querySelectorAll('[role="presentation"], [role="log"] > *, [role="region"]');
+  if (ariaEls.length > 0) {
+    ariaEls.forEach(function (el) {
+      var text = (el.textContent || '').trim();
+      if (text.length < 5) return;
+      var role = 'assistant';
+      if (el.querySelector('[contenteditable]') || text.length < 300) {
         role = 'user';
       }
       messages.push({
@@ -355,25 +534,58 @@ function extractClaude() {
     if (messages.length > 0) return messages;
   }
 
-  // L3: structural — look for alternating blocks within main content
-  const l3Container = document.querySelector('[role="main"]') || document.querySelector('main');
-  if (l3Container) {
-    const children = l3Container.querySelectorAll(':scope > div > div');
-    if (children.length > 0) {
-      children.forEach(function (child, i) {
-        const text = nodeToMarkdown(child, { listDepth: 0 }).trim();
-        if (text.length > 0) {
-          messages.push({
-            role: (i % 2 === 0) ? 'user' : 'assistant',
-            content: text
-          });
-        }
-      });
-      return messages;
+  // ═══════════════════════════════════════════════════════
+  // STRATEGY 6: Brute-force — grab ALL substantial text blocks from <main>
+  // and use alternating pattern (user/assistant/user/assistant...)
+  // This is the last resort but ensures SOMETHING is always returned.
+  // ═══════════════════════════════════════════════════════
+  var mainEl = document.querySelector('[role="main"]') || document.querySelector('main') || document.body;
+  var textBlocks = [];
+
+  // Find all text-containing divs that are likely message blocks
+  var allDivs = mainEl.querySelectorAll('div');
+  allDivs.forEach(function (div) {
+    // Skip if it's a child of another matched div (avoid nesting)
+    var text = div.textContent || '';
+    if (text.trim().length < 20) return;
+    // Only include "leaf" content divs (that have actual text, not just wrappers)
+    var directText = '';
+    for (var c = 0; c < div.childNodes.length; c++) {
+      if (div.childNodes[c].nodeType === Node.TEXT_NODE) {
+        directText += div.childNodes[c].textContent;
+      }
     }
+    // Must have some direct text or contain p/pre/code/li elements
+    var hasContentChildren = div.querySelector('p, pre, code, li, h1, h2, h3, h4, ol, ul, table, blockquote');
+    if (directText.trim().length > 10 || hasContentChildren) {
+      // Check this div isn't a parent of an already-found div
+      var isParentOfExisting = textBlocks.some(function (existing) {
+        return div.contains(existing.el);
+      });
+      if (!isParentOfExisting) {
+        // Remove any existing that is a parent of this div
+        textBlocks = textBlocks.filter(function (existing) {
+          return !existing.el.contains(div);
+        });
+        textBlocks.push({ el: div, text: text.trim() });
+      }
+    }
+  });
+
+  // Filter to only substantial blocks (likely messages)
+  textBlocks = textBlocks.filter(function (b) { return b.text.length > 20; });
+
+  if (textBlocks.length > 1) {
+    textBlocks.forEach(function (block, i) {
+      messages.push({
+        role: (i % 2 === 0) ? 'user' : 'assistant',
+        content: nodeToMarkdown(block.el, { listDepth: 0 }).trim()
+      });
+    });
+    if (messages.length > 0) return messages;
   }
 
-  // L4: generic
+  // L_FINAL: generic fallback
   return extractGeneric();
 }
 

@@ -382,14 +382,29 @@ ${idea}
      ══════════════════════════════════════════════════════════ */
 
   const INPUT_SELECTORS = [
+    // ChatGPT
     '#prompt-textarea',
+    // Claude — Lexical editor or ProseMirror
     'div[contenteditable="true"][data-lexical-editor]',
     'div[contenteditable="true"].ProseMirror',
+    'fieldset textarea',
+    'div.ProseMirror[contenteditable="true"]',
+    // ChatGPT / Claude fallback
     '[data-testid="composer-text-input"]',
+    // Gemini — rich textarea
     'rich-textarea .ql-editor[contenteditable="true"]',
-    'textarea#userInput',
+    'rich-textarea textarea',
+    // Copilot
+    'textarea#searchbox',
+    'cib-text-input textarea',
+    // DeepSeek
+    'textarea#chat-input',
+    // Grok
     'textarea[placeholder*="Ask"]',
+    // Perplexity
     'textarea[placeholder*="Follow"]',
+    // Generic — these must remain last
+    'textarea#userInput',
     'textarea[rows]',
     '[contenteditable="true"][role="textbox"]',
     'textarea',
@@ -549,15 +564,21 @@ ${idea}
       // ChatGPT
       '[data-message-author-role="assistant"] .markdown',
       '[data-message-author-role="assistant"]',
-      // Claude
-      '[data-is-streaming="false"] .font-claude-message',
+      // Claude — action-bar detection: find last message with feedback button
+      // (feedback buttons only exist on AI responses, not human messages)
       '.font-claude-message',
+      '[class*="claude-message"]',
+      '[class*="response-message"]',
       // Gemini
       'model-response .markdown',
       'model-response',
-      // Generic fallback
+      // Copilot
+      'cib-message[source="bot"]',
+      '[data-content="ai-message"]',
+      // DeepSeek / Grok / Generic
       '[class*="assistant"] [class*="content"]',
       '[class*="bot"] [class*="message"]',
+      '[class*="ai-response"]',
       'article:last-of-type'
     ];
     for (var i = 0; i < selectors.length; i++) {
@@ -568,6 +589,24 @@ ${idea}
         if (text.length > 20) return text.slice(0, 800); // cap at 800 chars
       }
     }
+
+    // Claude special fallback: find the last message block that has a feedback button
+    var actionBars = document.querySelectorAll('[role="group"][aria-label="Message actions"]');
+    for (var j = actionBars.length - 1; j >= 0; j--) {
+      var bar = actionBars[j];
+      var hasFeedback = bar.querySelector('button[aria-label*="feedback"], button[aria-label*="Feedback"]');
+      if (hasFeedback) {
+        // This is an AI message — find its content
+        var container = bar.closest('[data-testid]')
+                     || bar.closest('[class*="message"]')
+                     || (bar.parentElement && bar.parentElement.parentElement);
+        if (container) {
+          var text = (container.innerText || container.textContent || '').trim();
+          if (text.length > 20) return text.slice(0, 800);
+        }
+      }
+    }
+
     return null;
   }
 
