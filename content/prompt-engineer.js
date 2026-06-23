@@ -916,33 +916,48 @@ ${idea}
     function renderHistory() {
       PromptHistory.load(function(items) {
         if (!items.length) {
-          histList.innerHTML = '<div class="ach-hist-empty">No history yet</div>';
+          histList.textContent = '';
+          var emptyDiv = document.createElement('div');
+          emptyDiv.className = 'ach-hist-empty';
+          emptyDiv.textContent = 'No history yet';
+          histList.appendChild(emptyDiv);
           return;
         }
-        histList.innerHTML = items.map(function(item, idx) {
+        histList.textContent = '';
+        items.forEach(function(item, idx) {
           var d = new Date(item.ts);
           var time = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-          var preview = (item.idea || '').slice(0, 60) + ((item.idea || '').length > 60 ? '…' : '');
-          return '<div class="ach-hist-item" data-idx="' + idx + '">' +
-            '<span class="ach-hist-preview">' + preview + '</span>' +
-            '<span class="ach-hist-meta">' + (item.template || 'general') + ' · ' + time + '</span>' +
-          '</div>';
-        }).join('');
-        // Click to reload a past prompt
-        histList.querySelectorAll('.ach-hist-item').forEach(function(el) {
-          el.addEventListener('click', function() {
-            var idx = parseInt(el.dataset.idx, 10);
-            var item = items[idx];
-            if (!item) return;
-            ideaInput.value = item.idea || '';
-            if (item.template) {
+          var preview = (item.idea || '').slice(0, 60) + ((item.idea || '').length > 60 ? '\u2026' : '');
+
+          var row = document.createElement('div');
+          row.className = 'ach-hist-item';
+          row.setAttribute('data-idx', idx);
+
+          var prevSpan = document.createElement('span');
+          prevSpan.className = 'ach-hist-preview';
+          prevSpan.textContent = preview;  // safe: textContent, no XSS
+
+          var metaSpan = document.createElement('span');
+          metaSpan.className = 'ach-hist-meta';
+          metaSpan.textContent = (item.template || 'general') + ' \u00b7 ' + time;
+
+          row.appendChild(prevSpan);
+          row.appendChild(metaSpan);
+
+          row.addEventListener('click', function() {
+            var clickedItem = items[idx];
+            if (!clickedItem) return;
+            ideaInput.value = clickedItem.idea || '';
+            if (clickedItem.template) {
               overlay.querySelectorAll('.ach-tmpl-btn').forEach(function(b) { b.classList.remove('active'); });
-              var tb = overlay.querySelector('.ach-tmpl-btn[data-key="' + item.template + '"]');
-              if (tb) { tb.classList.add('active'); selectedTemplate = item.template; }
+              var tb = overlay.querySelector('.ach-tmpl-btn[data-key="' + clickedItem.template + '"]');
+              if (tb) { tb.classList.add('active'); selectedTemplate = clickedItem.template; }
             }
             histPanel.hidden = true;
             ideaInput.focus();
           });
+
+          histList.appendChild(row);
         });
       });
     }

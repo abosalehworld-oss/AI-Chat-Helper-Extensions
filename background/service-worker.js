@@ -249,7 +249,7 @@ async function handleGetFormattedText(message) {
     throw new Error('Tab ID is required');
   }
 
-  const validFormats = ['markdown', 'plaintext', 'html', 'json'];
+  const validFormats = ['markdown', 'plaintext', 'text', 'html', 'json'];
   const selectedFormat = validFormats.includes(format) ? format : 'markdown';
 
   // Ensure content script is injected
@@ -315,7 +315,7 @@ async function handleSaveSettings(settings) {
   }
 
   // Only save known setting keys (whitelist approach for security)
-  const allowedKeys = ['showFloatingButton', 'autoDetectPlatform', 'preferredFormat', 'summaryLength', 'theme'];
+  const allowedKeys = ['showFab', 'autoDetect', 'showFloatingButton', 'autoDetectPlatform', 'preferredFormat', 'summaryLength', 'theme'];
   const sanitized = {};
 
   for (const key of allowedKeys) {
@@ -382,9 +382,12 @@ async function handleCheckPlatform(tabId) {
       'gemini.google.com': { id: 'gemini', name: 'Google Gemini' },
       'copilot.microsoft.com': { id: 'copilot', name: 'Microsoft Copilot' },
       'perplexity.ai': { id: 'perplexity', name: 'Perplexity' },
+      'chat.deepseek.com': { id: 'deepseek', name: 'DeepSeek' },
+      'deepseek.com': { id: 'deepseek', name: 'DeepSeek' },
+      'grok.com': { id: 'grok', name: 'Grok' },
       'poe.com': { id: 'poe', name: 'Poe' },
       'you.com': { id: 'you', name: 'You.com' },
-      'huggingface.co': { id: 'huggingface', name: 'HuggingFace' }
+      'huggingface.co': { id: 'huggingface', name: 'HuggingChat' }
     };
 
     for (const [domain, platform] of Object.entries(platforms)) {

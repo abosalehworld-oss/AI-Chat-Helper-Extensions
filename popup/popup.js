@@ -546,10 +546,14 @@ async function extractChat(format) {
     });
   } catch (_) { /* CSS may already be injected */ }
 
-  // ── Step 4: Get formatted text ──
+  // ── Step 4: Get formatted text (async — auto-scrolls to load ALL messages) ──
   const fmtResults = await chrome.scripting.executeScript({
     target: { tabId: activeTabId },
-    func: (fmt) => {
+    func: async (fmt) => {
+      if (window.__aiChatHelper && window.__aiChatHelper.getFormattedTextAsync) {
+        return await window.__aiChatHelper.getFormattedTextAsync(fmt);
+      }
+      // Fallback to sync if async not available
       if (window.__aiChatHelper && window.__aiChatHelper.getFormattedText) {
         return window.__aiChatHelper.getFormattedText(fmt);
       }
@@ -1303,33 +1307,3 @@ function initLanguageToggle() {
   });
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// FIX: LONG CONVERSATION COPY
-// waitForContentScript extended + clipboard fallback
-// ═══════════════════════════════════════════════════════════
-
-/**
- * Extended wait — for very long pages that take time to parse.
- * Retries for up to 30s (150 × 200ms).
- */
-async function waitForContentScriptExtended(tabId) {
-  for (let i = 0; i < 150; i++) {
-    try {
-      const res = await chrome.scripting.executeScript({
-        target: { tabId },
-        func: () => typeof window.__aiChatHelper !== 'undefined'
-      });
-      if (res && res[0] && res[0].result === true) return true;
-    } catch (_) {}
-    await new Promise(r => setTimeout(r, 200));
-  }
-  return false;
-}
-
-// Patch handleCopyClick to show progress toast for long convos
-const _origCopy = handleCopyClick;
-async function handleCopyClick() {
-  showToast(currentLang === 'ar' ? 'جارٍ نسخ المحادثة...' : 'Extracting conversation...', 'info');
-  await _origCopy();
-}
