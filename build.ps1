@@ -1,36 +1,69 @@
-$src = $PSScriptRoot
-$outDir = Join-Path $src "dist"
-$zip = Join-Path $outDir "ai-chat-helper-v1.0.0.zip"
-$tmp = Join-Path $env:TEMP "ach_build_$(Get-Random)"
+# Run this from within the project folder:
+# Right-click build.ps1 -> Run with PowerShell
+# OR from terminal: cd to project folder, then: powershell -File build.ps1
 
-# Create dist dir
-if (!(Test-Path $outDir)) { New-Item -ItemType Directory $outDir | Out-Null }
-if (Test-Path $zip) { Remove-Item $zip -Force }
-if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
-New-Item -ItemType Directory $tmp | Out-Null
+Set-Location $PSScriptRoot
 
-# Copy required files only (no .bat, .ps1, .md dev files)
-Copy-Item (Join-Path $src "manifest.json")        $tmp
-Copy-Item (Join-Path $src "privacy-policy.html")  $tmp
+$ver = (Get-Content ".\manifest.json" -Raw | ConvertFrom-Json).version
+$out = ".\dist\ai-chat-helper-v$ver.zip"
 
-foreach ($d in @("background","popup","content","summarizer","icons","_locales")) {
-    $dst = Join-Path $tmp $d
-    New-Item -ItemType Directory $dst | Out-Null
-    Copy-Item (Join-Path $src $d) $dst -Recurse -Force
+if (!(Test-Path ".\dist")) { New-Item -ItemType Directory ".\dist" | Out-Null }
+if (Test-Path $out) { Remove-Item $out -Force }
+
+Add-Type -Assembly System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::Open(
+  (Resolve-Path ".\dist" | Select-Object -ExpandProperty Path) + "\ai-chat-helper-v$ver.zip",
+  'Create'
+)
+
+$entries = @(
+  'manifest.json',
+  'privacy-policy.html',
+  'LICENSE',
+  'background/service-worker.js',
+  'content/content.css',
+  'content/content.js',
+  'content/prompt-engineer.js',
+  'icons/icon16.png',
+  'icons/icon48.png',
+  'icons/icon128.png',
+  'popup/popup.html',
+  'popup/popup.css',
+  'popup/popup.js',
+  'summarizer/summarizer.js',
+  '_locales/en/messages.json',
+  '_locales/ar/messages.json'
+)
+
+Write-Host ""
+Write-Host "Building AI Chat Helper v$ver..." -ForegroundColor Cyan
+
+foreach ($e in $entries) {
+  $rel = ".\$($e.Replace('/', '\'))"
+  if (Test-Path $rel) {
+    $full = (Resolve-Path $rel).Path
+    [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $full, $e) | Out-Null
+    Write-Host "  + $e" -ForegroundColor Green
+  } else {
+    Write-Host "  ! MISSING: $e" -ForegroundColor Red
+  }
 }
 
-# Compress
-Compress-Archive -Path (Join-Path $tmp "*") -DestinationPath $zip -Force
-Remove-Item $tmp -Recurse -Force
+$zip.Dispose()
 
-$size = [math]::Round((Get-Item $zip).Length / 1KB, 1)
+$zipFinal = ".\dist\ai-chat-helper-v$ver.zip"
+$kb = [math]::Round((Get-Item $zipFinal).Length / 1KB, 1)
+
 Write-Host ""
-Write-Host "====================================" -ForegroundColor Cyan
-Write-Host "  BUILD SUCCESSFUL!" -ForegroundColor Green
-Write-Host "  File: dist\ai-chat-helper-v1.0.0.zip" -ForegroundColor White
-Write-Host "  Size: $size KB" -ForegroundColor White
-Write-Host "====================================" -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "  DONE! v$ver - $kb KB" -ForegroundColor Green
+Write-Host "  dist\ai-chat-helper-v$ver.zip" -ForegroundColor White
+Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Give this zip to anyone. They:" -ForegroundColor Yellow
+Write-Host "  1. Extract the zip to a folder" -ForegroundColor White
+Write-Host "  2. chrome://extensions -> Developer mode ON" -ForegroundColor White
+Write-Host "  3. Load unpacked -> select extracted folder" -ForegroundColor White
 Write-Host ""
 
-# Open dist folder
-Start-Process explorer.exe $outDir
+Start-Process explorer.exe (Resolve-Path ".\dist").Path
