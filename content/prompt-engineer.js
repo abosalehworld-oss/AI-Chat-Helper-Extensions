@@ -4,7 +4,7 @@
  * AI Chat Helper — Prompt Engineer Overlay
  * ==========================================
  * Injects a floating panel near the chat input box on AI platforms.
- * Rewrites user ideas into professional, Claude-quality prompts using
+ * Rewrites user ideas into professional, production-quality prompts using
  * advanced prompt engineering: Chain-of-Thought, Role-Context-Constraints,
  * Self-Verification, and structured output directives.
  *
@@ -35,7 +35,7 @@
 
   /* ══════════════════════════════════════════════════════════
      ADVANCED PROMPT TEMPLATES
-     These use Claude-level prompt engineering techniques:
+     These use professional-level prompt engineering techniques:
      1. Precise role definition with expertise boundaries
      2. Chain-of-Thought reasoning instructions
      3. Self-verification / self-critique steps
@@ -638,7 +638,7 @@ ${idea}
           '<div id="ach-header-left">' +
             '<span id="ach-logo">\u2726</span>' +
             '<span id="ach-title" data-en="Prompt Engineer" data-ar="مهندس البرومبت">Prompt Engineer</span>' +
-            '<span id="ach-badge">Claude-Level</span>' +
+            '<span id="ach-badge">Pro</span>' +
           '</div>' +
           '<button id="ach-close" aria-label="Close">\u2715</button>' +
         '</div>' +
