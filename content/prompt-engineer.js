@@ -704,6 +704,22 @@ ${idea}
           '<label for="ach-idea-input" id="ach-idea-label" data-en="Your idea (any language)" data-ar="فكرتك (بأي لغة)">Your idea (any language)</label>' +
           '<textarea id="ach-idea-input" dir="auto" data-placeholder-en="e.g. I want to build a todo app with React..." data-placeholder-ar="مثلاً: عايز أعمل تطبيق مهام بـ React..." placeholder="e.g. I want to build a todo app with React..." rows="3" spellcheck="true"></textarea>' +
         '</div>' +
+        '<div id="ach-seo-form" hidden>' +
+          '<div id="ach-seo-type-row">' +
+            '<label data-en="Page Type:" data-ar="نوع الصفحة:">Page Type:</label>' +
+            '<div id="ach-seo-types">' +
+              '<button type="button" class="ach-seo-type active" data-type="article" data-en="📝 Article" data-ar="📝 مقال">📝 Article</button>' +
+              '<button type="button" class="ach-seo-type" data-type="product" data-en="🛒 Product" data-ar="🛒 منتج">🛒 Product</button>' +
+              '<button type="button" class="ach-seo-type" data-type="landing" data-en="🚀 Landing" data-ar="🚀 هبوط">🚀 Landing</button>' +
+              '<button type="button" class="ach-seo-type" data-type="service" data-en="⚙️ Service" data-ar="⚙️ خدمة">⚙️ Service</button>' +
+              '<button type="button" class="ach-seo-type" data-type="custom-code" data-en="💻 Elementor/HTML" data-ar="💻 كود مخصص">💻 Elementor/HTML</button>' +
+            '</div>' +
+          '</div>' +
+          '<input type="text" id="ach-seo-url" data-placeholder-en="Page URL (optional)..." data-placeholder-ar="رابط الصفحة (اختياري)..." placeholder="Page URL (optional)...">' +
+          '<input type="text" id="ach-seo-keyword" data-placeholder-en="Target Keyword (optional)..." data-placeholder-ar="الكلمة المفتاحية المستهدفة (اختياري)..." placeholder="Target Keyword (optional)...">' +
+          '<textarea id="ach-seo-content" rows="3" data-placeholder-en="Paste your article text..." data-placeholder-ar="الصق نص المقال..." placeholder="Paste your article text..."></textarea>' +
+          '<textarea id="ach-seo-extra" rows="2" data-placeholder-en="Extra context, guidelines or requirements (optional)..." data-placeholder-ar="سياق إضافي، إرشادات أو متطلبات (اختياري)..." placeholder="Extra context, guidelines or requirements (optional)..."></textarea>' +
+        '</div>' +
         '<div id="ach-template-row" role="radiogroup" aria-label="Prompt type">' +
           tmplButtons +
         '</div>' +
