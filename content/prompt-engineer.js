@@ -413,197 +413,24 @@ ${idea}
       label: 'SEO',
       labelAr: '\u0633\u064a\u0648',
       icon: '\uD83D\uDE80',
-      descEn: 'Optimize any article or page for Google 2026 + AI search engines (ChatGPT, Gemini, Perplexity). Covers E-E-A-T, GEO signals, and structured data.',
-      descAr: '\u062d\u0633\u0651\u0646 \u0623\u064a \u0645\u0642\u0627\u0644 \u0623\u0648 \u0635\u0641\u062d\u0629 \u0644\u062c\u0648\u062c\u0644 2026 + \u0645\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a (ChatGPT, Gemini, Perplexity). \u064a\u063a\u0637\u064a E-E-A-T \u0648GEO \u0648\u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0646\u0638\u0645\u0629.',
-      exampleEn: 'e.g. "Optimize this article about WordPress SEO for 2026 search engines"',
-      exampleAr: '\u0645\u062b\u0627\u0644: "\u062d\u0633\u0651\u0646 \u0627\u0644\u0645\u0642\u0627\u0644 \u062f\u0647 \u0639\u0646 \u0646\u062c\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0642\u0639 \u0639\u0634\u0627\u0646 \u064a\u062a\u0635\u062f\u0631 \u062c\u0648\u062c\u0644 \u0648ChatGPT"',
-      build: (idea, lang) => [
-        'You are a senior SEO content strategist and GEO (Generative Engine Optimization) expert.',
-        '',
-        '## \u26a0\ufe0f Your Role & Honest Limitations',
-        'You are a CONTENT and STRUCTURE optimizer, NOT a keyword research tool.',
-        '- \u2705 CAN: analyze content quality, fix structure, improve E-E-A-T, write exact titles/meta tags/headings, generate FAQs, recommend schema, score GEO readiness, rewrite paragraphs',
-        '- \u274c CANNOT: provide real search volumes, real competitor rankings, live SERP data, or backlink metrics',
-        '- If user did NOT provide keyword/volume data: mark all keyword suggestions as "ESTIMATED - verify with Ahrefs/SEMrush/GSC"',
-        '- NEVER invent traffic numbers, DA scores, or ranking positions',
-        '',
-        '---',
-        '',
-        '## User Input (Paste: article + any real data you have)',
-        idea,
-        '',
-        '---',
-        '',
-        '## Step 0 - Data Inventory',
-        'Identify what the user provided before starting:',
-        '| Data Point | Status |',
-        '|------------|--------|',
-        '| Article / content text | YES / NO |',
-        '| Target keyword | [state it] or "Not provided" |',
-        '| Search volume | [state it] or "\u26a0\ufe0f Not provided - verify with tools" |',
-        '| Current ranking position | [state it] or "Not provided" |',
-        '| Competitor URLs | [list] or "Not provided" |',
-        '| Google Search Console / Ahrefs data | [state it] or "Not provided" |',
-        '',
-        '---',
-        '',
-        '## PART 1 - Content Quality & E-E-A-T',
-        '',
-        '### 1. E-E-A-T Deep Audit',
-        '| Signal | Score /10 | What Is Missing |',
-        '|--------|-----------|-----------------|',
-        '| Experience (first-hand proof, personal results, case studies) | /10 | |',
-        '| Expertise (demonstrates real knowledge, not just summarizing) | /10 | |',
-        '| Authoritativeness (named sources, external citations, data) | /10 | |',
-        '| Trustworthiness (date, author bio, disclaimers, fact-checking) | /10 | |',
-        '',
-        'Top 3 specific fixes (be exact, not generic):',
-        '1. ',
-        '2. ',
-        '3. ',
-        '',
-        '### 2. Search Intent Analysis',
-        '- Primary intent: Informational / Navigational / Commercial / Transactional',
-        '- Current content format: [describe]',
-        '- Optimal format for this intent: [e.g. step-by-step, comparison table, definition+examples]',
-        '- Format mismatch? YES / NO - if YES, describe the exact restructure needed',
-        '',
-        '### 3. On-Page SEO - Ready-to-Copy Rewrites',
-        '',
-        'Title tag (under 60 chars, keyword-first):',
-        '> ',
-        '',
-        'Meta description (under 155 chars, includes CTA):',
-        '> ',
-        '',
-        'H1:',
-        '> ',
-        '',
-        'Recommended H2 structure (5-7 subheadings for full topic coverage):',
-        '1. ',
-        '2. ',
-        '3. ',
-        '4. ',
-        '5. ',
-        '',
-        'Thin sections to expand (under 100 words):',
-        '- [section name] - add: [what specifically]',
-        '',
-        '### 4. Featured Snippet Capture',
-        'Paragraph snippet (40-60 words, directly answers the main query):',
-        '> ',
-        '',
-        'Numbered list snippet version:',
-        '1. ',
-        '2. ',
-        '3. ',
-        '',
-        '---',
-        '',
-        '## PART 2 - GEO: Generative Engine Optimization (AI Search 2026)',
-        '',
-        '> GEO = making your content the SOURCE that ChatGPT Search, Gemini, Perplexity, and Copilot CITE when users ask questions in your topic area. In 2026, AI engine citations drive significant traffic.',
-        '',
-        '### 5. AI Citation-Worthiness Scorecard',
-        '| Factor | Score /10 | Reason |',
-        '|--------|-----------|--------|',
-        '| Factual density (stats, dates, named entities, numbers) | /10 | |',
-        '| Quotability (self-contained statements AI can lift verbatim) | /10 | |',
-        '| Completeness (fully answers a question standalone) | /10 | |',
-        '| Structured data (tables, numbered lists, clear definitions) | /10 | |',
-        '| Overall GEO Score | /10 | |',
-        '',
-        '### 6. GEO Rewrites - 3 Paragraphs Made AI-Citable',
-        'Find 3 vague/weak paragraphs and rewrite each to be citation-worthy:',
-        '',
-        'Original paragraph 1: [quote it]',
-        'GEO-optimized rewrite:',
-        '> [Add: specific stat + "According to [source]..." + precise definition]',
-        '> Note: replace [VERIFY THIS STAT] with real data from an authoritative source',
-        '',
-        'Original paragraph 2: [quote it]',
-        'GEO-optimized rewrite:',
-        '> ',
-        '',
-        'Original paragraph 3: [quote it]',
-        'GEO-optimized rewrite:',
-        '> ',
-        '',
-        '### 7. Schema Markup - Top 3 for This Content',
-        '| # | Schema Type | Why This One | Key Fields to Fill |',
-        '|---|------------|-------------|-------------------|',
-        '| 1 | | | |',
-        '| 2 | | | |',
-        '| 3 | | | |',
-        '',
-        '### 8. FAQ Section - GEO Goldmine',
-        'Write 5 Q&A pairs for People Also Ask + AI engine queries.',
-        'Each answer = 2-4 sentences, completely self-contained (no "as mentioned above"):',
-        '',
-        'Q1: ',
-        'A1: ',
-        '',
-        'Q2: ',
-        'A2: ',
-        '',
-        'Q3: ',
-        'A3: ',
-        '',
-        'Q4: ',
-        'A4: ',
-        '',
-        'Q5: ',
-        'A5: ',
-        '',
-        '---',
-        '',
-        '## PART 3 - Keyword Analysis',
-        '',
-        'If user provided real keyword + volume data:',
-        '- Analyze keyword difficulty vs content depth match',
-        '- List 5 LSI/semantic variants and WHERE each should appear naturally',
-        '- Flag: over-optimized / under-optimized / good balance',
-        '',
-        'If NO keyword data was provided:',
-        '> \u26a0\ufe0f No real keyword data provided. Based on content topic, likely target keywords are:',
-        '> 1. [suggestion 1] - ESTIMATED, verify volume',
-        '> 2. [suggestion 2] - ESTIMATED, verify volume',
-        '> 3. [suggestion 3] - ESTIMATED, verify volume',
-        '> Verify with: Google Search Console (free) / Ahrefs / SEMrush / Ubersuggest',
-        '',
-        '---',
-        '',
-        '## PART 4 - Priority Action Plan',
-        '',
-        'Immediate (5-minute fixes, highest impact):',
-        '1. ',
-        '2. ',
-        '3. ',
-        '',
-        'This week (bigger impact, more effort):',
-        '1. ',
-        '2. ',
-        '',
-        'Ongoing (requires external tools):',
-        '- Verify keywords with Ahrefs / SEMrush',
-        '- Build internal links from existing site pages',
-        '- Monitor rankings via Google Search Console',
-        '- Track AI engine citations via Perplexity / ChatGPT searches',
-        '',
-        '## Final Assessment',
-        '| Metric | Score | Note |',
-        '|--------|-------|------|',
-        '| Content Quality | /100 | AI-reliable assessment |',
-        '| E-E-A-T Strength | /100 | AI-reliable assessment |',
-        '| GEO / AI Citation Readiness | /100 | AI-reliable assessment |',
-        '| SEO Ranking Potential | \u26a0\ufe0f Cannot score | Needs real keyword + backlink data |',
-        '',
-        '## Absolute Rules',
-        '- NEVER invent search volumes, DA scores, CTR data, or ranking positions',
-        '- Mark every estimated metric with \u26a0\ufe0f',
-        '- All rewrites must be copy-paste ready - never say "improve the intro" without showing the improved version',
-        '- If content appears AI-generated without human review, flag it explicitly as a Google quality risk'
-      ].join('\n')
+      descEn: 'Smart SEO: choose page type, paste content or code, get full audit + rewrites.',
+      descAr: '\u0645\u064f\u062d\u0633\u0651\u0646 SEO \u0630\u0643\u064a: \u0627\u062e\u062a\u0627\u0631 \u0646\u0648\u0639 \u0627\u0644\u0635\u0641\u062d\u0629\u060c \u0627\u0644\u0635\u0642 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 \u0623\u0648 \u0627\u0644\u0643\u0648\u062f\u060c \u0648\u0627\u062d\u0635\u0644 \u0639\u0644\u0649 \u062a\u062d\u0644\u064a\u0644 + \u0643\u0648\u062f \u0645\u064f\u062d\u0633\u0651\u0646.',
+      exampleEn: 'Choose page type, paste content/code, add keyword + URL',
+      exampleAr: '\u0627\u062e\u062a\u0627\u0631 \u0646\u0648\u0639 \u0627\u0644\u0635\u0641\u062d\u0629\u060c \u0627\u0644\u0635\u0642 \u0627\u0644\u0645\u062d\u062a\u0648\u0649\u060c \u0636\u064a\u0641 \u0627\u0644\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0641\u062a\u0627\u062d\u064a\u0629 + \u0627\u0644\u0631\u0627\u0628\u0637',
+      hasSeoForm: true,
+      build: function(idea, lang) {
+        var d = (typeof idea === 'object' && idea !== null) ? idea : { pageType: 'article', url: '', keyword: '', content: String(idea || ''), extraData: '' };
+        var pt = d.pageType || 'article'; var url = d.url || ''; var kw = d.keyword || ''; var content = d.content || ''; var extra = d.extraData || '';
+        var L = ['You are a senior SEO strategist and GEO expert for 2026.','','## Capabilities','- CAN: analyze content, rewrite titles/meta/headings, fix HTML, add schema, FAQs, GEO scoring, code optimization','- CANNOT: real search volumes, live rankings, backlink metrics','- NEVER invent traffic numbers or DA scores','','---','## Data Provided','| Field | Value |','|-------|-------|','| Page Type | '+pt+' |','| URL | '+(url||'Not provided')+' |','| Keyword | '+(kw||'Not provided')+' |','| Content | '+(content?'YES ('+content.length+' chars)':'Not provided')+' |',''];
+        if(pt==='article'){L=L.concat(['---','## PAGE TYPE: Blog/Article','','### Article Content',content||'[No content]','','---','','## Complete ALL:','','### 1. E-E-A-T Audit','| Signal | /10 | Missing |','|--------|-----|---------|','| Experience | | |','| Expertise | | |','| Authoritativeness | | |','| Trustworthiness | | |','','### 2. On-Page Rewrites (copy-paste ready)','Title (under 60 chars):','> ','','Meta desc (under 155 chars):','> ','','H1:','> ','','H2 structure (5-7):','1. ','2. ','3. ','4. ','5. ','','### 3. Content Gaps','List thin sections + what to add.','','### 4. Featured Snippet','Paragraph (40-60 words):','> ','','### 5. GEO Readiness','| Factor | /10 |','|--------|-----|','| Factual density | |','| Quotability | |','| Completeness | |','| Structured data | |','','Rewrite 3 paragraphs to be AI-citable:','','### 6. FAQ (5 Q&A)','Self-contained answers.','','### 7. Schema','| Type | Why | Fields |','|------|-----|--------|','','### 8. Actions','Now: 1. 2. 3.','This week: 1. 2.']);}
+        else if(pt==='product'){L=L.concat(['---','## PAGE TYPE: Product','','### Content',content||'[No content]','','---','','### 1. Title & Meta','Title ([Product] - [Benefit] | [Brand]):','> ','','Meta:','> ','','### 2. Product Schema (JSON-LD)','Write complete code.','','### 3. Description','Rewrite with benefits, specs, use cases, social proof. Add comparison table.','','### 4. Trust','AggregateRating schema + 5 buyer FAQ.','','### 5. GEO','3 AI-citable product statements.','','### 6. Actions','1. 2. 3.']);}
+        else if(pt==='landing'){L=L.concat(['---','## PAGE TYPE: Landing Page','','### Content',content||'[No content]','','---','','### 1. Above-the-Fold','Headline clarity /10, CTA visibility /10, Value prop in 3s: YES/NO','Suggested headline:','> ','','### 2. Title & Meta','Title:','> ','','Meta (urgency+CTA):','> ','','### 3. Trust Signals','| Signal | Present? | Fix |','|--------|----------|-----|','| Testimonials | | |','| Security | | |','| Guarantee | | |','| Social proof | | |','','### 4. CTA','Primary:','> ','Secondary:','> ','','### 5. Schema (WebPage+FAQ)','Write JSON-LD.','','### 6. Fixes','1. 2. 3.']);}
+        else if(pt==='service'){L=L.concat(['---','## PAGE TYPE: Service','','### Content',content||'[No content]','','---','','### 1. E-E-A-T (YMYL)','| Signal | /10 | Fix |','|--------|-----|-----|','| Credentials | | |','| Case studies | | |','| Contact info | | |','| Privacy policy | | |','','### 2. Title & Meta','Title ([Service] in [Location]):','> ','','Meta:','> ','','### 3. Service Schema','Write JSON-LD.','','### 4. Local SEO','NAP, local keywords, GBP tips.','','### 5. FAQ (5 Qs)','','### 6. GEO','3 expert paragraphs for AI citation.','','### 7. Actions','1. 2. 3.']);}
+        else if(pt==='custom-code'){L=L.concat(['---','## PAGE TYPE: Custom Code (Elementor/HTML)','','### IMPORTANT: Return FULL OPTIMIZED CODE','','### Original Code','```html',content||'<!-- No code -->','```','','---','','### 1. Issues Found','| # | Issue | Element | Severity |','|---|-------|---------|----------|','','### 2. OPTIMIZED Code (COMPLETE)','Apply: semantic HTML, heading hierarchy, alt text, schema JSON-LD, ARIA labels, lazy loading.','Mark fixes: <!-- SEO FIX: desc -->','','```html','<!-- Return COMPLETE optimized code -->','```','','### 3. Changes','| # | Change | Why |','|---|--------|-----|','','### 4. Schema','```json','{}','```','','### 5. Meta Tags','```html','<title>...</title>','<meta name="description" content="...">','```','','### 6. Other Recommendations']);}
+        if(extra){L=L.concat(['','---','## Extra Data',extra]);}
+        L=L.concat(['','---','## Rules','- NEVER invent volumes/rankings','- All rewrites: copy-paste ready','- Custom code: return COMPLETE code','- Flag AI-generated content risk']);
+        return L.join('\n');
+      }
     }
   };
 
@@ -991,6 +818,18 @@ ${idea}
       '.ach-tmpl-btn{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;color:rgba(255,255,255,.55);font-size:11.5px;font-weight:500;padding:4px 10px;cursor:pointer;font-family:inherit;transition:all .18s}',
       '.ach-tmpl-btn:hover{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.35);color:#c4b5fd}',
       '.ach-tmpl-btn.active{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.55);color:#c4b5fd;box-shadow:0 0 12px rgba(124,58,237,.2)}',
+      '#ach-seo-form{padding:0 16px}',
+      '#ach-seo-type-row{margin-bottom:8px}',
+      '#ach-seo-type-row label{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;display:block}',
+      '#ach-seo-types{display:flex;gap:4px;flex-wrap:wrap}',
+      '.ach-seo-type{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:rgba(255,255,255,.7);font-size:11px;padding:5px 8px;cursor:pointer;transition:all .2s;font-family:inherit}',
+      '.ach-seo-type:hover{background:rgba(255,255,255,.1);color:#fff}',
+      '.ach-seo-type.active{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(59,130,246,.3));border-color:rgba(124,58,237,.5);color:#fff}',
+      '#ach-seo-url,#ach-seo-keyword{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:12px;padding:8px 12px;margin-top:6px;font-family:inherit;outline:none;transition:border-color .2s}',
+      '#ach-seo-url:focus,#ach-seo-keyword:focus{border-color:rgba(124,58,237,.5)}',
+      '#ach-seo-content,#ach-seo-extra{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:12px;padding:8px 12px;margin-top:6px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s}',
+      '#ach-seo-content:focus,#ach-seo-extra:focus{border-color:rgba(124,58,237,.5)}',
+      '#ach-seo-url::placeholder,#ach-seo-keyword::placeholder,#ach-seo-content::placeholder,#ach-seo-extra::placeholder{color:rgba(255,255,255,.25)}',
       '#ach-generate-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#3b82f6);border:none;border-radius:10px;color:#fff;font-size:13.5px;font-weight:600;padding:11px 16px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(124,58,237,.35)}',
       '#ach-generate-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(124,58,237,.5)}',
       '#ach-generate-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}',
@@ -1083,6 +922,12 @@ ${idea}
         btn.classList.add('active');
         selectedTemplate = btn.dataset.key;
         showModeHint(btn.dataset.key);
+        var seoForm = overlay.querySelector('#ach-seo-form');
+        var ideaArea = overlay.querySelector('#ach-idea-area');
+        if (seoForm && ideaArea) {
+          if (btn.dataset.key === 'seo') { seoForm.hidden = false; ideaArea.style.display = 'none'; }
+          else { seoForm.hidden = true; ideaArea.style.display = ''; }
+        }
       });
     });
 
@@ -1092,6 +937,21 @@ ${idea}
         overlay.querySelectorAll('.ach-lang-pill').forEach(function(p) { p.classList.remove('active'); });
         pill.classList.add('active');
         selectedOutputLang = pill.dataset.outlang;
+      });
+    });
+
+    // SEO page type buttons
+    overlay.querySelectorAll('.ach-seo-type').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        overlay.querySelectorAll('.ach-seo-type').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var ca = overlay.querySelector('#ach-seo-content');
+        if (ca) {
+          var ph = {'article':'Paste your article text...','product':'Paste product name, description, price...','landing':'Paste landing page content...','service':'Paste service description...','custom-code':'Paste your HTML/CSS code (Elementor, etc.)...'};
+          var phAr = {'article':'\u0627\u0644\u0635\u0642 \u0646\u0635 \u0627\u0644\u0645\u0642\u0627\u0644...','product':'\u0627\u0644\u0635\u0642 \u0627\u0633\u0645 \u0627\u0644\u0645\u0646\u062a\u062c \u0648\u0627\u0644\u0648\u0635\u0641...','landing':'\u0627\u0644\u0635\u0642 \u0645\u062d\u062a\u0648\u0649 \u0635\u0641\u062d\u0629 \u0627\u0644\u0647\u0628\u0648\u0637...','service':'\u0627\u0644\u0635\u0642 \u0648\u0635\u0641 \u0627\u0644\u062e\u062f\u0645\u0629...','custom-code':'\u0627\u0644\u0635\u0642 \u0643\u0648\u062f HTML/CSS...'};
+          var isAr = overlay.classList.contains('ach-rtl');
+          ca.placeholder = isAr ? (phAr[btn.dataset.type]||'') : (ph[btn.dataset.type]||'');
+        }
       });
     });
 
@@ -1110,12 +970,26 @@ ${idea}
 
     // Generate — NO spinner, just text swap
     genBtn.addEventListener('click', function() {
-      var idea = ideaInput.value.trim();
-      if (!idea) {
-        ideaInput.style.borderColor = 'rgba(239,68,68,.5)';
-        ideaInput.focus();
-        setTimeout(function() { ideaInput.style.borderColor = ''; }, 1500);
-        return;
+      var idea;
+      if (selectedTemplate === 'seo') {
+        var seoContent = (overlay.querySelector('#ach-seo-content') || {}).value || '';
+        if (!seoContent.trim()) {
+          var sc = overlay.querySelector('#ach-seo-content');
+          if (sc) { sc.style.borderColor = 'rgba(239,68,68,.5)'; sc.focus(); setTimeout(function(){ sc.style.borderColor=''; }, 1500); }
+          return;
+        }
+        var selectedSeoType = 'article';
+        var activeTypeBtn = overlay.querySelector('.ach-seo-type.active');
+        if (activeTypeBtn) selectedSeoType = activeTypeBtn.dataset.type;
+        idea = { pageType: selectedSeoType, url: (overlay.querySelector('#ach-seo-url')||{}).value||'', keyword: (overlay.querySelector('#ach-seo-keyword')||{}).value||'', content: seoContent.trim(), extraData: (overlay.querySelector('#ach-seo-extra')||{}).value||'' };
+      } else {
+        idea = ideaInput.value.trim();
+        if (!idea) {
+          ideaInput.style.borderColor = 'rgba(239,68,68,.5)';
+          ideaInput.focus();
+          setTimeout(function() { ideaInput.style.borderColor = ''; }, 1500);
+          return;
+        }
       }
       genBtn.disabled = true;
       genText.textContent = '⏳';
@@ -1144,7 +1018,7 @@ ${idea}
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
         // Save to history
-        PromptHistory.save({ idea: idea, template: selectedTemplate, outputLang: selectedOutputLang, prompt: prompt, ts: Date.now() });
+        PromptHistory.save({ idea: (typeof idea === 'object' ? JSON.stringify(idea) : idea), template: selectedTemplate, outputLang: selectedOutputLang, prompt: prompt, ts: Date.now() });
       }, 100);
     });
 
